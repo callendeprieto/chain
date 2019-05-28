@@ -1,0 +1,174 @@
+pro chain,bin=bin
+
+nboost=3 ;factor to increase spatial sampling when binning is on
+
+;make data inventory 
+inventory,st,/ver,/bin
+
+wcal=where(strmid(st.obstype,0,3) eq 'Cal')
+wspe=where(strmid(st.obstype,0,3) eq 'Spe')
+wfla=where(strmid(st.obstype,0,3) eq 'Fla')
+wob=[wcal,wspe]
+
+if keyword_set(bin) then $
+	s=readfits('0000000000-20190312-HORS-Spectroscopy.fits',shd) else $
+	s=readfits('0001862217-20181212-HORS-Spectroscopy.fits',shd) ; skylight
+
+
+;find order information from skylight spectrum
+print,'find order information from skylight spectrum...'
+dispdir,s,idisp  ;find out the dispersion direction from a sky exposure
+
+
+;find positions and width of orders
+;assuming disp. direction is aligned with CCD
+bias,s
+if keyword_set(bin) then begin
+        s=rebin(s,514*nboost,2048) ; icreasing the sampling in the spatial dir. 
+	find, s, idisp, ap1, delta1, fwhm=4*nboost, smoothinglength=4*nboost, edge=19 ; 19.3
+endif else begin
+	find, s, idisp, ap1, delta1, fwhm=10.0, smoothinglength=50.
+endelse
+
+if n_elements(ap1) ne 27 then begin
+	print,'% CHAIN: ERROR -- did not find exactly 27 orders!'
+	print,'               -- this is a requirement for xcal.'
+        stop
+endif
+
+;determine curvature of orders
+traze, s, idisp, ap1, ap , smoothinglength=8., order=1,  width=0.7, last=21
+inspect, s, idisp, ap, delta1
+window,2
+inspect, s[0:200*nboost,*], idisp, ap, delta1
+window,3
+inspect, s[200*nboost:300*nboost,*], idisp, ap-200*nboost, delta1
+window,4
+help,s
+print,fix(n_elements(s[*,0])*0.9),n_elements(s[0,*])
+inspect, s[300*nboost:fix(n_elements(s[*,0])*0.9),*], idisp, ap-300*nboost, delta1
+
+;save aperture info
+writefits,'ap.fits',ap
+writefits,'ap1.fits',ap1
+openw,1,'delta1.dat'
+printf,1,delta1
+close,1
+print,'delta1=',delta1
+
+;average flats and extract average
+imadd,st[wfla].filename,'flat.fits',/av
+f = readfits('flat.fits',header)
+bias, f
+gain = sxpar(header,'GAIN')
+rdnoise = sxpar(header,'RDNOISE')
+f = f * gain
+vf =  f + rdnoise^2
+if keyword_set(bin) then begin
+	f = rebin(f,514*nboost,2048)
+	vf = rebin (vf, 514*nboost, 2048)
+endif
+collapse, f, idisp, ap, delta1, xf, vf= vf, vs=xfv
+ws,'xflat.fits',xf,vf, hd=header
+
+;extract both cals and spes
+print,'extracing cals and spes ...'
+for i=0,n_elements(wob)-1 do begin
+  j=wob[i]
+  frame = readfits(st[j].filename,header)
+  bias,frame,rdn=rdn,bin=bin
+  gain=sxpar(header,'GAIN')
+  rdnoise=sxpar(header,'RDNOISE')
+  print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  frame = frame * gain
+  vframe = frame + rdnoise^2
+  if keyword_set(bin) then begin
+	frame = rebin (frame, 514*nboost, 2048)
+	vframe = rebin (vframe, 514*nboost, 2048)
+  endif
+  collapse, frame, idisp, ap, delta1, xframe, vf = vframe, vs = xvframe 
+  ws, 'x'+st[j].filename, xframe, xvframe, hd=header
+endfor
+
+
+;wave cal. cals
+print,'wavelength calibration of cals ...'
+for i=0,n_elements(wcal)-1 do begin
+  print,'calibrating ... '+'x'+st[wcal[i]].filename
+  rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
+  xcal, xframe, wframe, bin=bin
+  help,xframe,xvframe,wframe
+  ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
+  if i eq 0 then begin
+    calfiles = 'x'+st[wcal[i]].filename
+    calmjd = st[wcal[i]].mjd0
+  endif else begin
+    calfiles = [ calfiles, 'x'+st[wcal[i]].filename ]
+    calmjd = [ calmjd, st[wcal[i]].mjd0 ]  
+  endelse
+endfor
+
+;average flatfield (approx. cal. using last cal)
+rs,'xflat.fits', xframe, xvframe, hd=header
+ws, 'xflat.fits', xframe, xvframe, w = wframe, hd=header
+
+
+print,calfiles
+print,calmjd
+
+;read instrumental response
+res=readfits('response.fits',hd)
+
+;spec
+for i=0,n_elements(wspe)-1 do begin
+  print,'calibrating ... '
+  print,'x'+st[wspe[i]].filename+'  mjd=',st[wspe[i]].mjd0
+  rs, 'x'+st[wspe[i]].filename, xframe, xvframe, norder=norder, hd=header
+  creject, xframe, xframe2
+  xframe = xframe2
+  wpre = max(where(st[wspe[i]].mjd0-calmjd gt 0.))
+  wpos = min(where(st[wspe[i]].mjd0-calmjd lt 0.))
+  print,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
+  print,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
+  rs, calfiles[wpre], x1, xv1, w = w1
+  rs, calfiles[wpos], x2, xv2, w = w2
+  if max(wpre) gt -1 and max(wpos) gt -1 then begin
+    d = (st[wspe[i]].mjd0 - calmjd[wpre] ) / (calmjd[wpos] - calmjd[wpre] )
+  endif else begin
+	if max(wpre) gt -1 and max(wpos) lt  0 then d=0.
+ 	if max(wpre) lt  0 and max(wpos) gt -1 then d=1.
+	if max(wpre) lt  0 and max(wpos) lt  0 then d=-1.
+  endelse
+  if d lt 0. then begin
+	print,'ERROR -- cannot wave calibrate!' 
+  endif else begin
+  	wframe = (1. - d) * w1 + d * w2 
+  	ws, 'x'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
+
+	;normalize by the flatfield
+	for j=0,norder-1 do begin
+	  ratio = 1.0d0 ; median(xf[j,*])/median(xframe[j,*])
+	  xframe[j,*] = xframe[j,*] / xf[j,*] * ratio 
+	  xvframe[j,*] = xvframe[j,*] / xf[j,*]^2 * ratio^2
+	endfor
+
+	;normalize by response
+        xframe = xframe / res
+	xvframe = xvframe / res^2	
+
+	;trim
+	margin=240
+	np=n_elements(xframe[0,*])
+	xframe = xframe[*,margin:np-1-margin]
+	xvframe = xvframe[*,margin:np-1-margin]
+        wframe = wframe[*,margin:np-1-margin]
+
+
+	ws, 'n'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
+
+  endelse
+endfor
+close,1
+
+end
+
