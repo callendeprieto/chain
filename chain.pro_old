@@ -3,7 +3,7 @@ pro chain,bin=bin
 nboost=3 ;factor to increase spatial sampling when binning is on
 
 ;make data inventory 
-inventory,st,/ver,/bin
+inventory,st,/ver,bin=bin
 
 wcal=where(strmid(st.obstype,0,3) eq 'Cal')
 wspe=where(strmid(st.obstype,0,3) eq 'Spe')
@@ -12,7 +12,7 @@ wob=[wcal,wspe]
 
 if keyword_set(bin) then $
 	s=readfits('0000000000-20190312-HORS-Spectroscopy.fits',shd) else $
-	s=readfits('0001862217-20181212-HORS-Spectroscopy.fits',shd) ; skylight
+	s=readfits('0001947116-20190312-HORS-Spectroscopy.fits',shd) ; skylight
 
 
 ;find order information from skylight spectrum
@@ -22,12 +22,12 @@ dispdir,s,idisp  ;find out the dispersion direction from a sky exposure
 
 ;find positions and width of orders
 ;assuming disp. direction is aligned with CCD
-bias,s
+hbias,s
 if keyword_set(bin) then begin
         s=rebin(s,514*nboost,2048) ; icreasing the sampling in the spatial dir. 
-	find, s, idisp, ap1, delta1, fwhm=4*nboost, smoothinglength=4*nboost, edge=19 ; 19.3
+	hfind, s, idisp, ap1, delta1, fwhm=4*nboost, smoothinglength=4*nboost, edge=19 ; 19.3
 endif else begin
-	find, s, idisp, ap1, delta1, fwhm=10.0, smoothinglength=50.
+	hfind, s, idisp, ap1, delta1, fwhm=10.0, smoothinglength=55.
 endelse
 
 if n_elements(ap1) ne 27 then begin
@@ -38,15 +38,15 @@ endif
 
 ;determine curvature of orders
 traze, s, idisp, ap1, ap , smoothinglength=8., order=1,  width=0.7, last=21
-inspect, s, idisp, ap, delta1
-window,2
-inspect, s[0:200*nboost,*], idisp, ap, delta1
-window,3
-inspect, s[200*nboost:300*nboost,*], idisp, ap-200*nboost, delta1
-window,4
+;inspect, s, idisp, ap, delta1
+;window,2
+;inspect, s[0:200*nboost,*], idisp, ap, delta1
+;window,3
+;inspect, s[200*nboost:300*nboost,*], idisp, ap-200*nboost, delta1
+;window,4
 help,s
-print,fix(n_elements(s[*,0])*0.9),n_elements(s[0,*])
-inspect, s[300*nboost:fix(n_elements(s[*,0])*0.9),*], idisp, ap-300*nboost, delta1
+;print,fix(n_elements(s[*,0])*0.9),n_elements(s[0,*])
+;inspect, s[300*nboost:fix(n_elements(s[*,0])*0.9),*], idisp, ap-300*nboost, delta1
 
 ;save aperture info
 writefits,'ap.fits',ap
@@ -59,7 +59,7 @@ print,'delta1=',delta1
 ;average flats and extract average
 imadd,st[wfla].filename,'flat.fits',/av
 f = readfits('flat.fits',header)
-bias, f
+hbias, f
 gain = sxpar(header,'GAIN')
 rdnoise = sxpar(header,'RDNOISE')
 f = f * gain
@@ -69,14 +69,18 @@ if keyword_set(bin) then begin
 	vf = rebin (vf, 514*nboost, 2048)
 endif
 collapse, f, idisp, ap, delta1, xf, vf= vf, vs=xfv
-ws,'xflat.fits',xf,vf, hd=header
+ws,'xflat.fits',xf,xfv, hd=header
 
-;extract both cals and spes
-print,'extracing cals and spes ...'
-for i=0,n_elements(wob)-1 do begin
-  j=wob[i]
+
+;remove scattered light and extract spes
+print,'removing scattered light and extracting spes ...'
+for i=0,n_elements(wspe)-1 do begin
+  j=wspe[i]
   frame = readfits(st[j].filename,header)
-  bias,frame,rdn=rdn,bin=bin
+  hbias,frame,rdn=rdn,bin=bin
+  if keyword_set(bin) then delta2 = delta1/3. else delta2=delta1
+  ;scatter,frame,idisp,delta2,back
+  ;frame = frame - back
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
   print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
@@ -90,6 +94,24 @@ for i=0,n_elements(wob)-1 do begin
   ws, 'x'+st[j].filename, xframe, xvframe, hd=header
 endfor
 
+;extract cals
+print,'extracing cals ...'
+for i=0,n_elements(wcal)-1 do begin
+  j=wcal[i]
+  frame = readfits(st[j].filename,header)
+  hbias,frame,rdn=rdn,bin=bin
+  gain=sxpar(header,'GAIN')
+  rdnoise=sxpar(header,'RDNOISE')
+  print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  frame = frame * gain
+  vframe = frame + rdnoise^2
+  if keyword_set(bin) then begin
+	frame = rebin (frame, 514*nboost, 2048)
+	vframe = rebin (vframe, 514*nboost, 2048)
+  endif
+  collapse, frame, idisp, ap, delta1, xframe, vf = vframe, vs = xvframe 
+  ws, 'x'+st[j].filename, xframe, xvframe, hd=header
+endfor
 
 ;wave cal. cals
 print,'wavelength calibration of cals ...'
@@ -163,6 +185,9 @@ for i=0,n_elements(wspe)-1 do begin
 	xvframe = xvframe[*,margin:np-1-margin]
         wframe = wframe[*,margin:np-1-margin]
 
+	;conti, xframe, con
+	;xframe = xframe/con
+	;xvframe = xvframe/con^2
 
 	ws, 'n'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
 

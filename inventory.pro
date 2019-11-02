@@ -17,7 +17,7 @@ for i=0,n_elements(files)-1 do begin
   ;print,info.size/1024./1024.
 
   if keyword_set(bin) then begin
-	if info.size/1024./1024. gt 2.1 then continue; MB
+;	if info.size/1024./1024. gt 2.1 then continue; MB
   endif else begin
 	if info.size/1024./1024. lt 30. then continue; MB
   endelse
@@ -65,10 +65,10 @@ endfor
 
 ;select only unbinned or binned data
 if keyword_set(bin) then begin
-        w=where(st.naxis2 eq 2048)
+        w=where(st.naxis1 eq 514 and st.naxis2 eq 2048)
         st=st[w]
 endif else begin
-        w=where(st.naxis2 eq 4096)
+        w=where(st.naxis1 eq 4112 and st.naxis2 eq 4096)
         st=st[w]
 endelse
 

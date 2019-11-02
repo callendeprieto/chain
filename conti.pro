@@ -14,9 +14,11 @@ con=dblarr(norder,npix)
 
 for j=0,norder-1 do begin
 	plot,frame[j,*]
-	continuum,6,10,0.1,3.0,frame[j,*],den
+        den = smooth(transpose(cmedian(frame[j,*],40,perc=0.9)),200)
+	;continuum,6,10,0.1,3.0,yc,den
 	oplot,den,col=180,thick=2
 	con[j,*]=den
+	stop
 endfor
 
 end

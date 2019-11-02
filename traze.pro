@@ -1,5 +1,5 @@
 pro traze,f,idisp,ap1,ap,$
-width=width,smoothinglength=smoothinglength,order=order,ntrace=ntrace,last=last
+width=width,smoothinglength=smoothinglength,order=order,ntrace=ntrace,first=first,last=last
 
 ;
 ; Trace orders in the dispersion direction
@@ -22,11 +22,15 @@ width=width,smoothinglength=smoothinglength,order=order,ntrace=ntrace,last=last
 ;						alignment of the orders with the detector)
 ;		  ntrace - integer		Number of points to trace order curvature
 ;
-;		  last - integer		Set this to the number of apertures to 
-;						consider in the tracing. After 'last' the
-;						reminder of the orders will use the same polynomial
-;						but shifted according to the aperture centers
-;						in ap1
+;		  first - integer		Set this to the number of the first aperture to 
+;						consider in the tracing. 
+;
+;		  last - integer		Set this to the number of the last apertures to 
+;						consider in the tracing. 
+;
+;						Before 'first' and after 'last' the orders will use the 
+;						same polynomial derived from first and last, respectively, 
+;						but shifted according to the aperture centers in ap1
 ;
 
 sf=size(f)
@@ -42,19 +46,16 @@ if n_elements(order) eq 0 then order=2
 if not keyword_set(ntrace) then ntrace=40
 
 nap1=n_elements(ap1)
-if not keyword_set(last) then last=nap1
+if not keyword_set(first) then first=0
+if not keyword_set(last) then last=nap1-1
 ap=fltarr(nap1,np)
 delta=median(ap1-shift(ap1,1))/2.*width
 
-for i=0,nap1-1 do begin
+for i=first,last do begin
 
   ;if i gt 0 then delta=(ap1[i]-ap1[i-1])/2.*width else $
   ;	delta=(ap1[i+1]-ap1[i])/2.*width
 
-  if i ge last then begin ;in this case we adopt the last trace
-	ap[i,*]=ap[i-1,*]+ap1[i]-ap1[i-1]
-	continue
-  endif
 
   delta=median(ap1-shift(ap1,1))/2.*width
 
@@ -113,6 +114,17 @@ for i=0,nap1-1 do begin
 
 endfor
 
+if first gt 0 then begin
+	for i=0,first-1 do begin
+		ap[i,*]=ap[first,*]+ap1[i]-ap[first,np/2]
+	endfor
+endif
+
+if last lt nap1-1 then begin
+	for i=last+1,nap1-1 do begin
+		ap[i,*]=ap[last,*]+ap1[i]-ap[last,np/2]
+	endfor
+endif
 
 
 end

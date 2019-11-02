@@ -54,18 +54,20 @@ if keyword_set(plot) then begin
 	yrange=[0,norder+1],$
 	ytitle='Aperture',title=hd(wobject),$
 	charsize=1.2,xcharsize=.01,xrange=[-npix*0.2,npix*1.2],$
-	xstyle=1,ystyle=1
-	xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.2
-	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.
+	xstyle=1,ystyle=1,col=0,back=255
+	xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,col=0
+	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=0
 	xyouts,npix,1,$
-	w[order-1,npix-1],charsize=1.
+	w[order-1,npix-1],charsize=1.3,col=0
 	
 	for order=2,norder do begin
-		oplot,findgen(npix),s[order-1,*]/mean(s[order-1,*])+order-1
-       		xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.2
-        	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.
+		oplot,findgen(npix),s[order-1,*]/mean(s[order-1,*])+order-1,$
+			col=0
+       		xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,$
+			col=0
+        	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=0
         	xyouts,npix,order,$
-        	w[order-1,npix-1],charsize=1.
+        	w[order-1,npix-1],charsize=1.3,col=0
 
 	endfor
 endif

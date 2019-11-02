@@ -39,16 +39,17 @@ if not keyword_set(smoothinglength) then smoothinglength=50
 if not keyword_set(xorder) then xorder=4
 if not keyword_set(edge) then edge=20.
 margin=0.3 ; exclude margin*100 % of the peaks on each end to fit a polynomial to the locations of the orders in the x-disp. direction
+margin=0.1
 x=smooth(total(f,idisp),smoothinglength)
-plot,x
+;plot,x
 peaks,x,loci,vals,fwhm=fwhm
 
 nloci=n_elements(loci)
 xo=findgen(nloci)
 c=poly_fit(xo[nloci*margin:nloci*(1.-margin)],loci[nloci*margin:nloci*(1.0-margin)],xorder)
-plot,xo,loci,psy=4
-oplot,xo[nloci*margin:nloci*(1.0-margin)],loci[nloci*margin:nloci*(1.0-margin)],psy=4,symsize=4
-oplot,xo,poly(xo,c),col=180,thick=2,psy=2
+;plot,xo,loci,psy=4
+;oplot,xo[nloci*margin:nloci*(1.0-margin)],loci[nloci*margin:nloci*(1.0-margin)],psy=4,symsize=4
+;oplot,xo,poly(xo,c),col=180,thick=2,psy=2
 
 print,'mean/std between the measured order locations and the fit=',mean(poly(xo[nloci*margin:nloci*(1.0-margin)],c)-loci[nloci*margin:nloci*(1.0-margin)]),stddev(poly(xo[nloci*margin:nloci*(1.0-margin)],c)-loci[nloci*margin:nloci*(1.0-margin)]),' pixels'
 
