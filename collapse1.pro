@@ -1,4 +1,4 @@
-pro collapse1,f,idisp,ap1,s
+pro collapse1,f,idisp,ap1,s,vf=vf,vs=vs
 
 ;
 ; Collapse the spectrum assuming the dispersion is perfectly aligned with the detector
@@ -26,5 +26,13 @@ s=fltarr(nap1,np)
 for i=0,nap1-1 do begin
   s[i,*]=total(f[fix(ap1[i]-delta):fix(ap1[i]+delta),*],1)
 endfor
+
+if n_elements(vf) gt 0 then begin
+	vs=fltarr(nap1,np)
+	if idisp eq 2 then vf2=vf else vf2=transpose(vf) 
+	for i=0,nap1-1 do begin
+                vs[i,*]=total(vf2[fix(ap1[i]-delta):fix(ap1[i]+delta),*],1)
+	endfor
+endif
 
 end

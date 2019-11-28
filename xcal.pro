@@ -77,46 +77,78 @@ for i=0,26 do begin
   endfor
  
   print,ngood,' successfully measured lines'
-  pixels=pixels[1:ngood]
-  lambdas=lambdas[1:ngood]
 
-  c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
-  c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
-  c3=poly_fit(pixels,lambdas,3,yerror=yerror3)  
-  c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
-  print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
-	yerror1,yerror2,yerror3,yerror4
+  yerror1=0.0
+  yerror2=0.0
+  yerror3=0.0
+  yerror4=0.0
 
-  wgood=where(abs(lambdas-poly(pixels,c4)) lt 0.003)
-  pixels=pixels[wgood]
-  lambdas=lambdas[wgood]
-  c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
-  c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
-  c3=poly_fit(pixels,lambdas,3,yerror=yerror3)
-  c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
-  print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
-	yerror1,yerror2,yerror3,yerror4
+  if ngood le 1 then begin
 
-  if yerror4 gt 0.0 then x[i,*]=poly(dindgen(nx),c4) else begin
-    if yerror3 gt 0.0 then x[i,*]=poly(dindgen(nx),c3) else begin
-      if yerror2 gt 0.0 then x[i,*]=poly(dindgen(nx),c2)
-    endelse
-  endelse
-
-  calstats[*,i]=[i+1,n_elements(pixels),median(x[i,*]-shift(x[i,*],1)),$
+    calstats[*,i]=[i+1,0.,0.,$
 	yerror1,yerror2,yerror3,yerror4]
 
-  if 1 eq 0 then begin
-  if n_elements(pixels) gt 1 then begin
+    x[i,*]=dblarr(nx)
 
-    !p.multi=[0,0,0]
-    plot,pixels,lambdas,psy=-2
-    plot,pixels,lambdas-poly(pixels,c4),yr=[-0.005,0.005],psy=2
-    oplot,[0,1e4],[-0.002,-0.002],linestyle=2
-    oplot,[0,1e4],[0.002,0.002],linestyle=2
-    ;wait,3
-  endif
-  endif
+  endif else begin
+
+    pixels=pixels[1:ngood]
+    lambdas=lambdas[1:ngood]
+
+    c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
+    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
+    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3)  
+    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
+    print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
+	  yerror1,yerror2,yerror3,yerror4
+
+    if yerror4 gt 0.0 then xpixels=poly(pixels,c4) else begin
+      if yerror3 gt 0.0 then xpixels=poly(pixels,c3) else begin
+        if yerror2 gt 0.0 then xpixels=poly(pixels,c2) else begin
+          xpixels=poly(pixels,c1)
+        endelse
+      endelse
+    endelse
+
+    yerror1=0.0
+    yerror2=0.0
+    yerror3=0.0
+    yerror4=0.0
+
+    wgood=where(abs(lambdas-xpixels) lt 0.003)
+    ngood=n_elements(wgood)
+    pixels=pixels[wgood]
+    lambdas=lambdas[wgood]
+    c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
+    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
+    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3)  
+    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
+    print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
+	yerror1,yerror2,yerror3,yerror4
+
+    if yerror4 gt 0.0 then x[i,*]=poly(dindgen(nx),c4) else begin
+      if yerror3 gt 0.0 then x[i,*]=poly(dindgen(nx),c3) else begin
+        if yerror2 gt 0.0 then x[i,*]=poly(dindgen(nx),c2) else begin
+          x[i,*]=poly(dindgen(nx),c1)
+        endelse
+      endelse
+    endelse
+
+    calstats[*,i]=[i+1,n_elements(pixels),median(x[i,*]-shift(x[i,*],1)),$
+	yerror1,yerror2,yerror3,yerror4]
+
+    if 1 eq 0 then begin
+      if n_elements(pixels) gt 1 then begin
+        !p.multi=[0,0,0]
+        plot,pixels,lambdas,psy=-2
+        plot,pixels,lambdas-poly(pixels,c4),yr=[-0.005,0.005],psy=2
+        oplot,[0,1e4],[-0.002,-0.002],linestyle=2
+        oplot,[0,1e4],[0.002,0.002],linestyle=2
+        ;wait,3
+      endif
+    endif
+
+  endelse
 
 endfor
 close,11
