@@ -174,6 +174,8 @@ for i=0,n_elements(wspe)-1 do begin
 	printf,10,'ERROR -- cannot wave calibrate!' 
 	print,'ERROR -- cannot wave calibrate!' 
   endif else begin
+        if abs(d) lt 1.e-7 then w2=w1
+        if abs(d-1.) lt 1.e-7 then w1=w2
   	wframe = (1. - d) * w1 + d * w2 
   	ws, 'x'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
 
