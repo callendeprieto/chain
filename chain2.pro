@@ -34,7 +34,7 @@ f = readfits('flat.fits',header)
 ;find order information from flat...
 printf,10,'find order information from flat spectrum...'
 dispdir,f,idisp  
-hbias,f
+hbias,f,/bin
 
 ;we either find the apertures on the fly from the flat 
 if (1 eq 0) then begin
@@ -195,7 +195,7 @@ for i=0,n_elements(wspe)-1 do begin
 
   endelse
 endfor
-close,1
+close,10
 
 end
 

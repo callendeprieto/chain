@@ -15,12 +15,6 @@ if not keyword_set(palette) then palette=12
 
 ;read image, convert to e-, and compute variance
 d=readfits(im,hd)
-hbias,d
-gain=sxpar(hd,'GAIN')
-rdnoise=sxpar(hd,'RDNOISE')
-d=d*gain
-vd=d+rdnoise^2
-
 
 n=sxpar(hd,'NAXIS')
 n1=sxpar(hd,'NAXIS1')
@@ -41,6 +35,13 @@ endif else begin
     return
   endelse
 endelse
+
+hbias,d,bin=bin
+gain=sxpar(hd,'GAIN')
+rdnoise=sxpar(hd,'RDNOISE')
+d=d*gain
+vd=d+rdnoise^2
+
 
 ;default apertures
 idisp=2
