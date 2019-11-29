@@ -15,6 +15,7 @@ if not keyword_set(palette) then palette=12
 
 ;read image, convert to e-, and compute variance
 d=readfits(im,hd)
+hbias,d
 gain=sxpar(hd,'GAIN')
 rdnoise=sxpar(hd,'RDNOISE')
 d=d*gain
