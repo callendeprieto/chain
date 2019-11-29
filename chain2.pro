@@ -152,12 +152,17 @@ for i=0,n_elements(wspe)-1 do begin
   xframe = xframe2
   wpre = max(where(st[wspe[i]].mjd0-calmjd gt 0.))
   wpos = min(where(st[wspe[i]].mjd0-calmjd lt 0.))
-  printf,10,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
-  printf,10,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
-  print,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
-  print,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
-  rs, calfiles[wpre], x1, xv1, w = w1
-  rs, calfiles[wpos], x2, xv2, w = w2
+  if max(wpre) gt -1 then begin  
+    printf,10,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
+    print,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
+    rs, calfiles[wpre], x1, xv1, w = w1
+  endif
+  if max(wpos) gt -1 then begin  
+    printf,10,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
+    print,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
+    rs, calfiles[wpos], x2, xv2, w = w2
+  endif
+
   if max(wpre) gt -1 and max(wpos) gt -1 then begin
     d = (st[wspe[i]].mjd0 - calmjd[wpre] ) / (calmjd[wpos] - calmjd[wpre] )
   endif else begin
