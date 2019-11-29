@@ -1,4 +1,4 @@
-pro hql,im,palette=palette
+pro hql,im,x,y,palette=palette
 
 ;+
 ;  HORuS quick-look extraction
@@ -90,7 +90,7 @@ xyouts,0.4,0.05,'Wavelength (nm)',/normal,charsize=1.5,col=0
 xyouts,-npix*0.28,order-1,w[order-1,0],charsi=1.3,col=0
 xyouts,npix,order-1,w[order-1,npix-1],charsize=1.3,col=0
 	
-for order=2,norder do begin
+for order=1,norder do begin
   oplot,findgen(npix),xd[order-1,*]/mean(xd[order-1,*])+order-1,$
     col=0
 
@@ -98,6 +98,7 @@ for order=2,norder do begin
   xyouts,npix,order-1,w[order-1,npix-1],charsize=1.3,col=0
 endfor
 
-
+x=w
+y=xd
 
 end
