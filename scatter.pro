@@ -32,12 +32,12 @@ back[*,*]=0.0
 
 for i=0,np-1 do begin
   res=cmedian(f[*,i],delta1*3.,perc=0.08)
-  back[*,i]=smooth(res,delta1*6.)
+  back[*,i]=csmooth(res,delta1*6)
 endfor
 
 for i=0,nx-1 do begin
   if idisp eq 2 then res=transpose(back[i,*]) else res=back[i,*]
-  back[i,*]=smooth(res,delta1)
+  back[i,*]=csmooth(res,delta1)
 endfor
 
 if idisp eq 1 then begin

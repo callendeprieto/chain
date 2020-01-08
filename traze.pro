@@ -104,7 +104,7 @@ for i=first,last do begin
   endfor
 
   ;plot,tpos,tcent,psy=-2,yr=[min(tcent),max(tcent)],/ystyl
-  c=poly_fit(tpos,smooth(tcent,smoothinglength),order)
+  c=poly_fit(tpos,csmooth(tcent,smoothinglength),order)
   ;oplot,tpos,poly(tpos,c),thick=2,col=180
   ap[i,*]=poly(findgen(np),c)
   ;print,c

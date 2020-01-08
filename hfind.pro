@@ -40,7 +40,7 @@ if not keyword_set(xorder) then xorder=4
 if not keyword_set(edge) then edge=20.
 margin=0.3 ; exclude margin*100 % of the peaks on each end to fit a polynomial to the locations of the orders in the x-disp. direction
 margin=0.1
-x=smooth(total(f,idisp),smoothinglength)
+x=csmooth(total(f,idisp),smoothinglength)
 ;plot,x
 peaks,x,loci,vals,fwhm=fwhm
 

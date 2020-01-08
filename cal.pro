@@ -19,7 +19,7 @@ loadct,12
   w=where(t[0,*] gt min(x[i,*]) and t[0,*] lt max(x[i,*]))
   scale=max(t[1,w])/max(ce[i,*])
   tt0=t[0,w]
-  tt=smooth(t[1,w]/scale,30)
+  tt=csmooth(t[1,w]/scale,30)
   oplot,tt0,tt,col=180
   peaks,tt,loci2,y2,fwhm=4.0,thres=max(ce[i,*])/f2
   loci=loci[1:n_elements(loci)-1]
