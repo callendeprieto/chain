@@ -73,6 +73,8 @@ endelse
 ;save aperture info
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
+printf,10,'fshift=',fshift
+print,'fshift=',fshift
 
 
 gain = sxpar(header,'GAIN')
