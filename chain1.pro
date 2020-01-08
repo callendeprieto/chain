@@ -4,7 +4,7 @@ if not keyword_set(logfile) then logfile='logfile1'
 
 ;make data inventory 
 inventory,st
-if max(st) eq -1 then begin
+if n_elements(st) eq 0 then begin
   print,'% CHAIN1: no data without binning'
   return
 endif

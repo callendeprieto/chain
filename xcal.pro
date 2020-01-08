@@ -11,7 +11,7 @@ pro  xcal,c,x,calstats=calstats,bin=bin
 ;			bin - integer	Set to indicate 8x2 binning
 
 
-ptol=5.2 ; pixels from the expected location to accept a line fit
+ptol=8.0 ; pixels from the expected location to accept a line fit
 tol=0.07 ; nm around nominal central wavelength to search for a line in the HORuS spectrum
 wtol=3.3 ; max fwhm accepted for good lines (units of pixels)
 
@@ -64,7 +64,7 @@ for i=0,26 do begin
      ;print,nwx/2.-1.-ptol,nwx/2.-1.+ptol
      ;print,wtol
 
-     if a[0] gt 100. and a[1] gt nwx/2.-1.-ptol and a[1] lt nwx/2.-1.+ptol and abs(a[2]) gt 1.0 and abs(a[2]) lt wtol then begin
+     if a[0] gt 100. and a[1] gt nwx/2.-1.-ptol and a[1] lt nwx/2.-1.+ptol and abs(a[2]) gt 0.8 and abs(a[2]) lt wtol then begin
 
      ;plot,findgen(nwx),c[i,wx],title=string(a[0])+string(a[1])+string(a[2]),psym=-2
      ;oplot,findgen(nwx),g,col=180
@@ -72,7 +72,8 @@ for i=0,26 do begin
      pixels=[pixels,a[1]+wx[0]]
      lambdas=[lambdas,l0]
  
-    endif
+    endif 
+
     
   endfor
  
@@ -115,7 +116,7 @@ for i=0,26 do begin
     yerror3=0.0
     yerror4=0.0
 
-    wgood=where(abs(lambdas-xpixels) lt 0.003)
+    wgood=where(abs(lambdas-xpixels) lt 0.009)
     ngood=n_elements(wgood)
     pixels=pixels[wgood]
     lambdas=lambdas[wgood]

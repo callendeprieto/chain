@@ -65,7 +65,6 @@ endfor
 
 if n_elements(st) eq 0 then begin
   print,'% INVENTORY: -- no data available for the specified binning size'
-  st=-1
   return
 endif
 

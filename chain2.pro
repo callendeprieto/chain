@@ -4,7 +4,7 @@ if not keyword_set(logfile) then logfile='logfile'
 
 ;make data inventory 
 inventory,st,/bin
-if max(st) eq -1 then begin
+if n_elements(st) eq 0 then begin
   print,'% CHAIN1: no binned (2x8) data'
   return
 endif
@@ -127,7 +127,13 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'calibrating ... '+'x'+st[wcal[i]].filename
   print,'calibrating ... '+'x'+st[wcal[i]].filename
   rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
-  xcal, xframe, wframe, /bin
+  xcal, xframe, wframe, /bin,calstats=calstats
+  print,'min(max) of rms/dispersion for 5th-order=',min(s[6,*]/s[2,*]),'(',$
+                                      min(s[6,*]/s[2,*]),')'
+
+  printf,10,'min(max) of rms/dispersion for 5th-order=',min(s[6,*]/s[2,*]),'(',$
+                                      min(s[6,*]/s[2,*]),')'
+
   help,xframe,xvframe,wframe
   ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin
