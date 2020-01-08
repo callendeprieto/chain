@@ -63,6 +63,12 @@ for i=0,n_elements(files)-1 do begin
 
 endfor
 
+if n_elements(st) eq 0 then begin
+  print,'% INVENTORY: -- no data available for the specified binning size'
+  st=-1
+  return
+endif
+
 ;select only unbinned or binned data
 if keyword_set(bin) then begin
         w=where(st.naxis1 eq 514 and st.naxis2 eq 2048)
