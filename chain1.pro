@@ -1,7 +1,6 @@
 pro chain1,logfile=logfile
 
 if not keyword_set(logfile) then logfile='logfile1'
-openw,10,logfile
 
 ;make data inventory 
 inventory,st
@@ -9,6 +8,9 @@ if max(st) eq -1 then begin
   print,'% CHAIN1: no data without binning'
   return
 endif
+
+openw,10,logfile
+
 
 print,'make inventory of fits files ...'
 print,'                           filename                object  obstype    mjd0     exptime [s]'
