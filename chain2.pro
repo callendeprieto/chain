@@ -129,10 +129,10 @@ for i=0,n_elements(wcal)-1 do begin
   rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
   xcal, xframe, wframe, /bin,calstats=cs
   print,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
-                                      min(cs[6,*]/cs[2,*]),')'
+                                      max(cs[6,*]/cs[2,*]),')'
 
   printf,10,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
-                                      min(cs[6,*]/cs[2,*]),')'
+                                      max(cs[6,*]/cs[2,*]),')'
 
   help,xframe,xvframe,wframe
   ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
