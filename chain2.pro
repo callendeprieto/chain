@@ -49,12 +49,12 @@ if (1 eq 0) then begin
   endif
 endif else begin
 ; or we take it from a reference image and use a ref flat to find the appropropriate offset
-  ap1=readfits('/home/callende/idl/hors/rap1.fits')
-  ap=readfits('/home/callende/idl/hors/rap.fits')
+  ap1=readfits('/home/callende/idl/chain/rap1.fits')
+  ap=readfits('/home/callende/idl/chain/rap.fits')
   delta1=4.2
 
   ;derive spatial-direction offset of orders using flat
-  rflat=readfits('/home/callende/idl/hors/rflat.fits')
+  rflat=readfits('/home/callende/idl/chain/rflat.fits')
   trflat=total(rflat,2)
   tflat=total(f,2)
   ;if not keyword_set(bin) then tflat=rebin(tflat,514)

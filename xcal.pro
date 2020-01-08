@@ -20,7 +20,7 @@ nx=4096
 if keyword_set(bin) then nx=nx/2
 
 x=dblarr(27,nx)
-openr,11,'/home/callende/idl/hors/hors_thar.dat'
+openr,11,'/home/callende/idl/chain/hors_thar.dat'
 for i=0,26 do begin
 
 

@@ -45,7 +45,7 @@ vd=d+rdnoise^2
 
 ;default apertures
 idisp=2
-ap1=readfits('/home/callende/idl/hors/rap1.fits',0,hd)
+ap1=readfits('/home/callende/idl/chain/rap1.fits',0,hd)
 if bin eq 1 then ap1=ap1/3. else ap1=ap1/3./8.
 
 
@@ -57,7 +57,7 @@ norder=27
 npix=4096
 if bin then npix=npix/2
 w=dblarr(norder,npix)
-openr,11,'/home/callende/idl/hors/hors_thar.dat'
+openr,11,'/home/callende/idl/chain/hors_thar.dat'
 for i=0,26 do begin
   readf,11,i2,nlines,order
   coef=dblarr(order+1)
