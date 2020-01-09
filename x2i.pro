@@ -7,7 +7,7 @@ pro	x2i,xfile,ifile
 ;
 
 rs,xfile,y,v,w=x,hd=hd
-merge,x,y,v,x2,y2,v2
+cmerge,x,y,v,x2,y2,v2
 
 delta=5d-3
 nfreq=(max(x2)-min(x2))/delta

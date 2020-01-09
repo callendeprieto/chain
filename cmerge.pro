@@ -1,4 +1,4 @@
-pro  merge,x,y,v,x2,y2,v2
+pro  cmerge,x,y,v,x2,y2,v2
 
 ;
 ; merge orders, adding the signal at overlapping wavelengths
