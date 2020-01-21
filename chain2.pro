@@ -13,7 +13,7 @@ openw,10,logfile
 
 
 print,'make inventory of fits files ...'
-print,'                               filename                object  obstype      RA       DEC          mjd0        exptime [s]'
+print,'                               filename        object  obstype      RA       DEC          mjd0        exptime [s]'
 printf,10,'make inventory of fits files ...'
 printf,10,'                           filename                object  obstype      RA        DEC         mjd0        exptime [s]'
 for i=0,n_elements(st.obstype)-1 do begin
