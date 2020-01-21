@@ -111,7 +111,7 @@ print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   frame = readfits(st[j].filename,header)
-  if st[j].exptime gt 120.
+  if st[j].exptime gt 120. then begin
     gain=sxpar(header,'gain')
     rdnoise=sxpar(header,'rdnoise')
     writefits,'tmp.fits',frame,header
