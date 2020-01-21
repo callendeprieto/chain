@@ -31,6 +31,19 @@ wspe=where(strmid(st.obstype,0,3) eq 'Spe')
 wfla=where(strmid(st.obstype,0,3) eq 'Fla')
 wob=[wcal,wspe]
 
+;have got enough data?
+if max(wcal) lt 0 then begin
+  print,'% CHAIN2: no Cal images available, I quit' 
+  return
+endif
+if max(wfla) lt 0 then begin
+  print,'% CHAIN2: no Fla images available, I quit' 
+  return
+endif
+if max(wspe) lt 0 then begin
+  print,'% CHAIN2: no Spe images available, only Cal frames will collapsed' 
+endif
+
 ;average binned flats and extract average
 printf,10,'creating average binned flat ...'
 print,'creating average flat ...'
@@ -57,7 +70,6 @@ endif else begin
 ; or we take it from a reference image and use a ref flat to find the appropropriate offset
   ap1=readfits('/home/callende/idl/chain/rap1.fits')
   ap=readfits('/home/callende/idl/chain/rap.fits')
-  delta1=4.2
 
   ;derive spatial-direction offset of orders using flat
   rflat=readfits('/home/callende/idl/chain/rflat.fits')
@@ -65,11 +77,15 @@ endif else begin
   tflat=total(f,2)
   ;if not keyword_set(bin) then tflat=rebin(tflat,514)
   xc,trflat,tflat,trflat/100.,tflat/100.,fshift,efshift
-  ap1=ap1/3.-fshift
+  ap1=ap1-fshift
+  ;ap1=ap1/3.-fshift ;old ref. flat
+  width=0.72
+  delta1=median(ap1-shift(ap1,1))/2.*width
 endelse
 
 
 ;save aperture info
+writefits,strcompress('ap1.fits',/rem),ap1
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
 printf,10,'fshift=',fshift
@@ -201,7 +217,7 @@ for i=0,n_elements(wspe)-1 do begin
 	endfor
 
 	;trim
-	margin=240
+	margin=0
 	np=n_elements(xframe[0,*])
 	xframe = xframe[*,margin:np-1-margin]
 	xvframe = xvframe[*,margin:np-1-margin]

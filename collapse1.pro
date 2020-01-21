@@ -1,4 +1,4 @@
-pro collapse1,f,idisp,ap1,s,vf=vf,vs=vs
+pro collapse1,f,idisp,ap1,s,vf=vf,vs=vs,width=width
 
 ;
 ; Collapse the spectrum assuming the dispersion is perfectly aligned with the detector
@@ -9,6 +9,10 @@ pro collapse1,f,idisp,ap1,s,vf=vf,vs=vs
 ;						in the cross-dispersion direction
 ;	OUT	 s - float array		Collapsed spectrum 
 ;	Keywords: fwhm	- float			approx. FWHM of the orders 
+;		  width - float			ratio between the width of the spectral 
+;						orders and the distance between them 
+;						(0.72 is a good choice for HORS)
+;		  smoothi
 ;		  smoothinglength -integer	length over which one should smooth the 
 ;						flux to help the peak search
 ;
@@ -21,7 +25,8 @@ nx=sf[xdisp] ; npixels in the cross-disp. direction
 
 nap1=n_elements(ap1)
 
-delta=median(ap1-shift(ap1,1))/2.*0.7
+if not keyword_set(width) then width=0.72
+delta=median(ap1-shift(ap1,1))/2.*width
 s=fltarr(nap1,np)
 for i=0,nap1-1 do begin
   s[i,*]=total(f[fix(ap1[i]-delta):fix(ap1[i]+delta),*],1)

@@ -13,7 +13,7 @@ width=width,smoothinglength=smoothinglength,order=order,ntrace=ntrace,first=firs
 ;	Keywords:
 ;		  width - float			ratio between the width of the spectral 
 ;						orders and the distance between them 
-;						(0.7 is a good choice for HORS)
+;						(0.72 is a good choice for HORS)
 ;		  smoothinglength -integer	length over which one should smooth the 
 ;						flux to help the peak search
 ;		  order  - integer		order for the polynomial fitting to the 
@@ -31,6 +31,7 @@ width=width,smoothinglength=smoothinglength,order=order,ntrace=ntrace,first=firs
 ;						Before 'first' and after 'last' the orders will use the 
 ;						same polynomial derived from first and last, respectively, 
 ;						but shifted according to the aperture centers in ap1
+;                                               and for apertures last and later the tracing order will always be zero
 ;
 
 sf=size(f)
@@ -40,9 +41,9 @@ if idisp eq 1 then xdisp=2
 nx=sf[xdisp] ; npixels in the cross-disp. direction
 
 
-if not keyword_set(width) then width=0.7
+if not keyword_set(width) then width=0.72
 if not keyword_set(smoothinglength) then smoothinglength=4
-if n_elements(order) eq 0 then order=2
+if n_elements(order) eq 0 then order=1
 if not keyword_set(ntrace) then ntrace=40
 
 nap1=n_elements(ap1)
@@ -52,6 +53,8 @@ ap=fltarr(nap1,np)
 delta=median(ap1-shift(ap1,1))/2.*width
 
 for i=first,last do begin
+
+  if i eq last then order = 0
 
   ;if i gt 0 then delta=(ap1[i]-ap1[i-1])/2.*width else $
   ;	delta=(ap1[i+1]-ap1[i])/2.*width
