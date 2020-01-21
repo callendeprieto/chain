@@ -64,7 +64,6 @@ if (1 eq 0) then begin
   	printf,10,'% CHAIN: ERROR -- did not find exactly 27 orders!'
   	printf,10,'               -- this is a requirement for xcal.'
   	close,10
-       stop
   endif
 endif else begin
 ; or we take it from a reference image and use a ref flat to find the appropropriate offset
