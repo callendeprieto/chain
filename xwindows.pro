@@ -1,4 +1,4 @@
-pro exwindows,ap,delta,left,right
+pro xwindows,ap,delta,left,right
 
 ;determine extraction windows when the central apertures (ap) have been trazed
 
