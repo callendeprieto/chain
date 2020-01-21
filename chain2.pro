@@ -80,8 +80,12 @@ endif else begin
   ap1=ap1-fshift
   ;ap1=ap1/3.-fshift ;old ref. flat
   width=0.72
-  delta1=median(ap1-shift(ap1,1))/2.*width
 endelse
+
+;compute delta1 (order width) 
+;it must be done consistently in the inspect/collapse (1/2) routines
+delta1=median(ap1-shift(ap1,1))/2.*width
+
 
 
 ;save aperture info
@@ -101,12 +105,18 @@ collapse1, f, idisp, ap1, xf, vf= vf, vs=xfv
 ws,'xflat.fits',xf,xfv, hd=header
 
 
-;remove scattered light and extract spes
+;remove cosmics, scattered light and extract spes
 printf,10,'removing scattered light and extracting spes ...'
 print,'removing scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   frame = readfits(st[j].filename,header)
+  gain=sxpar(header,'gain')
+  rdnoise=sxpar(header,'rdnoise')
+  writefits,'tmp.fits',frame,header
+  la_cosmic,'tmp.fits',gain=gain,readn=rdnoise
+  frame = readfits('tmp.fits',header)
+  file_delete,'tmp.fits'
   hbias,frame,rdn=rdn,/bin
   scatter,frame,idisp,delta1,back
   frame = frame - back
