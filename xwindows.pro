@@ -6,8 +6,8 @@ pro xwindows,ap,delta,left,right
 nap=n_elements(ap[*,0])
 np=n_elements(ap[0,*])
 
-left=intarr(np,nap)
-right=intarr(np,nap)
+left=intarr(nap,np)
+right=intarr(nap,np)
 
 for i=0,nap-1 do begin
   left[i,*] = fix(ap[i,*] + delta) -fix(2.*delta)-1
