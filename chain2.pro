@@ -19,7 +19,7 @@ printf,10,'                           filename                object  obstype   
 for i=0,n_elements(st.obstype)-1 do begin
 	printf,10,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
 		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,12.5,x,f7.0)'
+		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
 	print,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
 		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
 		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
