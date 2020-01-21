@@ -1,11 +1,11 @@
 pro chain1,logfile=logfile
 
-if not keyword_set(logfile) then logfile='logfile1'
+if not keyword_set(logfile) then logfile='logfile'
 
 ;make data inventory 
-inventory,st
+inventory,st,/bin
 if n_elements(st) eq 0 then begin
-  print,'% CHAIN1: no data without binning'
+  print,'% CHAIN1: no binned (2x8) data'
   return
 endif
 
@@ -13,16 +13,16 @@ openw,10,logfile
 
 
 print,'make inventory of fits files ...'
-print,'                           filename                object  obstype    mjd0     exptime [s]'
+print,'                               filename          object  obstype      RA        DEC          mjd0        exptime [s]'
 printf,10,'make inventory of fits files ...'
-printf,10,'                           filename                object  obstype    mjd0     exptime [s]'
+printf,10,'                           filename                object  obstype      RA        DEC         mjd0        exptime [s]'
 for i=0,n_elements(st.obstype)-1 do begin
 	printf,10,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f7.0)'
+		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
+		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
 	print,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f7.0)'
+		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
+		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
 endfor
 
 
@@ -31,12 +31,24 @@ wspe=where(strmid(st.obstype,0,3) eq 'Spe')
 wfla=where(strmid(st.obstype,0,3) eq 'Fla')
 wob=[wcal,wspe]
 
+;have got enough data?
+if max(wcal) lt 0 then begin
+  print,'% CHAIN2: no Cal images available, I quit' 
+  return
+endif
+if max(wfla) lt 0 then begin
+  print,'% CHAIN2: no Fla images available, I quit' 
+  return
+endif
+if max(wspe) lt 0 then begin
+  print,'% CHAIN2: no Spe images available, only Cal frames will collapsed' 
+endif
+
 ;average binned flats and extract average
 printf,10,'creating average binned flat ...'
 print,'creating average flat ...'
 imadd,st[wfla].filename,'flat.fits',/av
 f = readfits('flat.fits',header)
-f = rebin(f, 514, 2048)
 
 ;find order information from flat...
 printf,10,'find order information from flat spectrum...'
@@ -58,7 +70,6 @@ endif else begin
 ; or we take it from a reference image and use a ref flat to find the appropropriate offset
   ap1=readfits('/home/callende/idl/chain/rap1.fits')
   ap=readfits('/home/callende/idl/chain/rap.fits')
-  delta1=4.2
 
   ;derive spatial-direction offset of orders using flat
   rflat=readfits('/home/callende/idl/chain/rflat.fits')
@@ -66,11 +77,19 @@ endif else begin
   tflat=total(f,2)
   ;if not keyword_set(bin) then tflat=rebin(tflat,514)
   xc,trflat,tflat,trflat/100.,tflat/100.,fshift,efshift
-  ap1=ap1/3.-fshift
+  ap1=ap1-fshift
+  ;ap1=ap1/3.-fshift ;old ref. flat
+  width=0.72
 endelse
+
+;compute delta1 (order width) 
+;it must be done consistently in the inspect/collapse (1/2) routines
+delta1=median(ap1-shift(ap1,1))/2.*width
+
 
 
 ;save aperture info
+writefits,strcompress('ap1.fits',/rem),ap1
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
 printf,10,'fshift=',fshift
@@ -83,16 +102,23 @@ f = f * gain
 vf =  f + rdnoise^2
 
 collapse1, f, idisp, ap1, xf, vf= vf, vs=xfv
-ws,'xflat1.fits',xf,xfv, hd=header
+ws,'xflat.fits',xf,xfv, hd=header
 
 
-;remove scattered light and extract spes
-printf,10,'removing scattered light and extracting spes ...'
-print,'removing scattered light and extracting spes ...'
+;remove cosmics, scattered light and extract spes
+printf,10,'removing cosmics and scattered light and extracting spes ...'
+print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   frame = readfits(st[j].filename,header)
-  frame = rebin(frame, 514, 2048)
+  if st[j].exptime gt 120. then begin
+    gain=sxpar(header,'gain')
+    rdnoise=sxpar(header,'rdnoise')
+    writefits,'tmp.fits',frame,header
+    la_cosmic,'tmp.fits',gain=gain,readn=rdnoise
+    frame = readfits('tmp-out.fits',header)
+    file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
+  endif
   hbias,frame,rdn=rdn,/bin
   scatter,frame,idisp,delta1,back
   frame = frame - back
@@ -112,7 +138,6 @@ print,'extracing cals ...'
 for i=0,n_elements(wcal)-1 do begin
   j=wcal[i]
   frame = readfits(st[j].filename,header)
-  frame = rebin(frame, 514, 2048)
   hbias,frame,rdn=rdn,/bin
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
@@ -132,7 +157,13 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'calibrating ... '+'x'+st[wcal[i]].filename
   print,'calibrating ... '+'x'+st[wcal[i]].filename
   rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
-  xcal, xframe, wframe, /bin
+  xcal, xframe, wframe, /bin,calstats=cs
+  print,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
+                                      max(cs[6,*]/cs[2,*]),')'
+
+  printf,10,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
+                                      max(cs[6,*]/cs[2,*]),')'
+
   help,xframe,xvframe,wframe
   ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin
@@ -145,8 +176,8 @@ for i=0,n_elements(wcal)-1 do begin
 endfor
 
 ;average flatfield (approx. cal. using last cal)
-rs,'xflat1.fits', xframe, xvframe, hd=header
-ws, 'xflat1.fits', xframe, xvframe, w = wframe, hd=header
+rs,'xflat.fits', xframe, xvframe, hd=header
+ws, 'xflat.fits', xframe, xvframe, w = wframe, hd=header
 
 
 print,calfiles
@@ -198,7 +229,7 @@ for i=0,n_elements(wspe)-1 do begin
 	endfor
 
 	;trim
-	margin=240
+	margin=0
 	np=n_elements(xframe[0,*])
 	xframe = xframe[*,margin:np-1-margin]
 	xvframe = xvframe[*,margin:np-1-margin]

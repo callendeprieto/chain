@@ -22,21 +22,21 @@ writefits,'rflat.fits',f
 writefits,'rap1.fits',ap1
 writefits,'rap.fits',ap
 
-collapse2,s,idisp,ap,s2
+collapse,s,idisp,ap,s2
 collapse1,s,idisp,ap1,s1
 window,6
 loadct,0
 !p.multi=[0,1,2]
-inspect2,s[50:150,*],idisp,ap-50.
+inspect,s[50:150,*],idisp,ap-50.
 inspect1,s[50:150,*],idisp,ap1-50.,/noerase
 window,1
 loadct,0
 !p.multi=[0,1,2]
-inspect2,s[200:350,*],idisp,ap-200.
+inspect,s[200:350,*],idisp,ap-200.
 inspect1,s[200:350,*],idisp,ap1-200.,/noerase
 window,2
 !p.multi=[0,1,2]
-inspect2,s[350:400,*],idisp,ap-350.
+inspect,s[350:400,*],idisp,ap-350.
 inspect1,s[350:400,*],idisp,ap1-350.,/noerase
 
 window,6,xsize=1000,ysize=600
