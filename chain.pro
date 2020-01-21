@@ -96,7 +96,7 @@ writefits,strcompress('ap1.fits',/rem),ap1
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
 printf,10,'delta=',delta
-printf,'delta=',delta
+print,'delta=',delta
 printf,10,'fshift=',fshift
 print,'fshift=',fshift
 
