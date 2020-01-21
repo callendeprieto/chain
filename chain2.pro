@@ -106,8 +106,8 @@ ws,'xflat.fits',xf,xfv, hd=header
 
 
 ;remove cosmics, scattered light and extract spes
-printf,10,'removing scattered light and extracting spes ...'
-print,'removing scattered light and extracting spes ...'
+printf,10,'removing cosmics and scattered light and extracting spes ...'
+print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   frame = readfits(st[j].filename,header)
