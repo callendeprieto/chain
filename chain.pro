@@ -86,6 +86,7 @@ endelse
 ;compute delta1 (order width) 
 ;it must be done consistently in the inspect/collapse (1/2) routines
 delta1=median(ap1-shift(ap1,1))/2.*width
+np=n_elements(ap[0,*])
 delta=median(ap[*,np/2]-shift(ap[*,np/2],1))/2.*width
 
 
