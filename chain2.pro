@@ -111,12 +111,14 @@ print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   frame = readfits(st[j].filename,header)
-  gain=sxpar(header,'gain')
-  rdnoise=sxpar(header,'rdnoise')
-  writefits,'tmp.fits',frame,header
-  la_cosmic,'tmp.fits',gain=gain,readn=rdnoise
-  frame = readfits('tmp-out.fits',header)
-  file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
+  if st[j].exptime gt 120.
+    gain=sxpar(header,'gain')
+    rdnoise=sxpar(header,'rdnoise')
+    writefits,'tmp.fits',frame,header
+    la_cosmic,'tmp.fits',gain=gain,readn=rdnoise
+    frame = readfits('tmp-out.fits',header)
+    file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
+  endif
   hbias,frame,rdn=rdn,/bin
   scatter,frame,idisp,delta1,back
   frame = frame - back
