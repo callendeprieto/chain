@@ -13,16 +13,16 @@ openw,10,logfile
 
 
 print,'make inventory of fits files ...'
-print,'                           filename                object  obstype    mjd0     exptime [s]'
+print,'                           filename                object  obstype   RA   DEC    mjd0     exptime [s]'
 printf,10,'make inventory of fits files ...'
-printf,10,'                           filename                object  obstype    mjd0     exptime [s]'
+printf,10,'                           filename                object  obstype    RA      DEC     mjd0     exptime [s]'
 for i=0,n_elements(st.obstype)-1 do begin
 	printf,10,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f7.0)'
+		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
+		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f7.0)'
 	print,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f7.0)'
+		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
+		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
 endfor
 
 
