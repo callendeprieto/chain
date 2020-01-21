@@ -5,10 +5,10 @@ pro inspect,f,idisp,left,right,_extra=e
 ;
 ;	IN:      f - float array		Input image
 ;		idisp - integer (1/2)		Dispersion direction
-;	        left   - float array		Array with location of left edge
+;	        left   - int array		Array with location of left edge
 s
 ;			(nap x np)	        for apertures
-;	        right   - float array		Array with location of right edg
+;	        right   - int array		Array with location of right edg
 es
 ;			(nap x np)	        for apertures
 ;	OUT	 none, just a plot

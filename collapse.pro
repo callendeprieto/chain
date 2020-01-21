@@ -5,9 +5,9 @@ pro collapse,f,idisp,left,right,s,vs=vs,vf=vf
 ;
 ;	IN:      f - float array		Input image
 ;		idisp - integer (1/2)		Dispersion direction
-;	        left   - float array		Array with location of left edges
+;	        left   - int array		Array with location of left edges
 ;			(nap x np)	        for apertures
-;	        right   - float array		Array with location of right edges
+;	        right   - int array		Array with location of right edges
 ;			(nap x np)	        for apertures
 ;
 ;	OUT	 s - float array		Collapsed spectrum 
