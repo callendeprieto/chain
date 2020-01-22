@@ -104,8 +104,6 @@ rdnoise = sxpar(header,'RDNOISE')
 f = f * gain
 vf =  f + rdnoise^2
 
-help,f,idisp,left1,right1
-
 collapse1, f, idisp, left1, right1, xf, vf= vf, vs=xfv
 ws,'xflat.fits',xf,xfv, hd=header
 
