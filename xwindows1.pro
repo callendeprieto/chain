@@ -6,7 +6,7 @@ pro xwindows1,ap1,delta1,left1,right1
 nap=n_elements(ap[*,0])
 np=n_elements(ap[0,*])
 
-left1 = fix(ap1 - delta)
-right1 = fix(ap1 + delta)
+left1 = fix(ap1 - delta1)
+right1 = fix(ap1 + delta1)
 
 end
