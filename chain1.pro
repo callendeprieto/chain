@@ -104,9 +104,10 @@ rdnoise = sxpar(header,'RDNOISE')
 f = f * gain
 vf =  f + rdnoise^2
 
+help,f,idisp,left1,right1
+
 collapse1, f, idisp, left1, right1, xf, vf= vf, vs=xfv
 ws,'xflat.fits',xf,xfv, hd=header
-
 
 ;remove cosmics, scattered light and extract spes
 printf,10,'removing cosmics and scattered light and extracting spes ...'
@@ -131,7 +132,7 @@ for i=0,n_elements(wspe)-1 do begin
   print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
-  collapse1, frame, idisp, left1, xframe, vf = vframe, vs = xvframe 
+  collapse1, frame, idisp, left1, right1, xframe, vf = vframe, vs = xvframe 
   ws, 'x'+st[j].filename, xframe, xvframe, hd=header
 endfor
 

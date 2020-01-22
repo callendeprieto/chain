@@ -1,4 +1,4 @@
-pro collapse1,f,idisp,left1,right1,s,vf=vf,vs=vs,width=width
+pro collapse1,f,idisp,left1,right1,s,vf=vf,vs=vs
 
 ;
 ; Collapse the spectrum assuming the dispersion is perfectly aligned with the detector
@@ -12,9 +12,6 @@ pro collapse1,f,idisp,left1,right1,s,vf=vf,vs=vs,width=width
 
 ;	OUT	 s - float array		Collapsed spectrum 
 ;	Keywords: fwhm	- float			approx. FWHM of the orders 
-;		  width - float			ratio between the width of the spectral 
-;						orders and the distance between them 
-;						(0.72 is a good choice for HORS)
 ;		  smoothi
 ;		  smoothinglength -integer	length over which one should smooth the 
 ;						flux to help the peak search
