@@ -608,7 +608,7 @@ nfiles = n_elements(imlist)
 if (nfiles eq 1) then begin
     ;; nice to allow user to find a whole bunch of files
     ;; which match a particular describtion
-    imlist = findfile(imlist[0])
+    imlist = file_search(imlist[0])
 endif
 nfiles = n_elements(imlist)
 if (not keyword_set(outlist)) then outlist = imlist

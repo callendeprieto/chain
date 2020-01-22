@@ -92,6 +92,7 @@ delta=median(ap[*,np/2]-shift(ap[*,np/2],1))/2.*width
 
 ;save aperture info
 writefits,strcompress('ap1.fits',/rem),ap1
+writefits,'ap.fits',ap
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
 printf,10,'delta=',delta
