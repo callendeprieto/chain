@@ -87,6 +87,7 @@ endelse
 delta1=median(ap1-shift(ap1,1))/2.*width
 
 
+
 ;save aperture info
 writefits,strcompress('ap1.fits',/rem),ap1
 printf,10,'delta1=',delta1
@@ -95,7 +96,7 @@ printf,10,'fshift=',fshift
 print,'fshift=',fshift
 
 ;find actual left/right limits for each aperture
-xwindows1,ap1,delta1,left1,right1
+xwindows,ap1,delta1,left1,right1
 
 
 gain = sxpar(header,'GAIN')
@@ -130,7 +131,7 @@ for i=0,n_elements(wspe)-1 do begin
   print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
-  collapse1, frame, idisp, left1, right1, xframe, vf = vframe, vs = xvframe 
+  collapse1, frame, idisp, left1, xframe, vf = vframe, vs = xvframe 
   ws, 'x'+st[j].filename, xframe, xvframe, hd=header
 endfor
 
