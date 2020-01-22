@@ -30,14 +30,14 @@ nap1=n_elements(ap1)
 
 s=fltarr(nap1,np)
 for i=0,nap1-1 do begin
-  s[i,*]=total(f[left[i]:right[i],*],1)
+  s[i,*]=total(f[left1[i]:right1[i],*],1)
 endfor
 
 if n_elements(vf) gt 0 then begin
 	vs=fltarr(nap1,np)
 	if idisp eq 2 then vf2=vf else vf2=transpose(vf) 
 	for i=0,nap1-1 do begin
-                vs[i,*]=total(vf2[left[i]:right[i],*],1)
+                vs[i,*]=total(vf2[left1[i]:right1[i],*],1)
 	endfor
 endif
 
