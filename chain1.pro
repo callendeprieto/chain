@@ -119,7 +119,7 @@ for i=0,n_elements(wspe)-1 do begin
     writefits,'tmp.fits',frame,header
     la_cosmic,'tmp.fits',gain=gain,readn=rdnoise
     frame = readfits('tmp-out.fits',header)
-    file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
+    ;file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
   endif
   hbias,frame,rdn=rdn,/bin
   scatter,frame,idisp,delta1,back
