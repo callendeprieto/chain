@@ -23,7 +23,7 @@ xdisp=1
 if idisp eq 1 then xdisp=2
 nx=sf[xdisp] ; npixels in the cross-disp. direction
 
-nap1=n_elements(ap1)
+nap1=n_elements(left1)
 
 s=fltarr(nap1,np)
 for i=0,nap1-1 do begin
