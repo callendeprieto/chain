@@ -101,7 +101,6 @@ print,'fshift=',fshift
 
 ;find actual left/right limits for each aperture
 xwindows,ap,delta,left,right
-stop
 
 gain = sxpar(header,'GAIN')
 rdnoise = sxpar(header,'RDNOISE')
