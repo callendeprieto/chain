@@ -127,6 +127,7 @@ for i=0,n_elements(wspe)-1 do begin
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
   print,rdnoise,gain
+  if rdnoise eq 0 then stop
   printf,10,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
