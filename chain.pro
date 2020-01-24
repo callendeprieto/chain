@@ -235,7 +235,7 @@ for i=0,n_elements(wspe)-1 do begin
 	endfor
 
 	;trim
-	margin=0
+	margin=150
 	np=n_elements(xframe[0,*])
 	xframe = xframe[*,margin:np-1-margin]
 	xvframe = xvframe[*,margin:np-1-margin]
