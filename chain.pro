@@ -171,7 +171,6 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
                                       max(cs[6,*]/cs[2,*]),')'
 
-  help,xframe,xvframe,wframe
   ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin
     calfiles = 'x'+st[wcal[i]].filename
