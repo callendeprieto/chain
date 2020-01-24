@@ -1,4 +1,4 @@
-pro collapse,f,idisp,left,right,s,vs=vs,vf=vf,dleft=dleft,dright=dright
+pro collapse,f,idisp,left,right,s,vs=vs,vf=vf,dleft=dleft,dright=dright,optimal=optimal
 
 ;
 ; Collapse the spectrum
@@ -37,16 +37,50 @@ if n_elements(vf) eq 0 then vf=f
 vs=fltarr(nap,np)
 if idisp eq 2 then vf2=vf else vf2=transpose(vf)
 
-for i=0,nap-1 do begin
-  for j=0,np-1 do vs[i,j]=total(vf2[left[i,j]+dleft:right[i,j]+dright,j])
-endfor
 
-for i=0,nap-1 do begin
-  for j=0,np-1 do begin
-    s[i,j]=total(f2[left[i,j]+dleft:right[i,j]+dright,j])
+
+if keyword_set(optimal) then begin
+
+  ;spatial profile for weighting
+  mm=minmax(right-left+1)
+  if mm[0] ne mm[1] then begin
+    print,'% COLLAPSE: the width of the extraction window is not constant, cannot derive weights for optimal extraction!'
+  endif else begin
+    p=fltarr(nap,mm[0])
+  endelse
+
+  for i=0,nap-1 do begin
+    for j=0,np-1 do begin
+      p[i,*]=p[i,*]+f2[left[i,j]+dleft:right[i,j]+dright,j]
+    endfor
   endfor
-endfor
+  p=p/np
+
+  w=1./p
+
+  for i=0,nap-1 do begin
+    for j=0,np-1 do vs[i,j]=total(vf2[left[i,j]+dleft:right[i,j]+dright,j]*w[i,*])/total(w[i,*])*mm[0]
+  endfor
+
+  for i=0,nap-1 do begin
+    for j=0,np-1 do begin
+      s[i,j]=total(f2[left[i,j]+dleft:right[i,j]+dright,j]*w[i,*])/total(w[i,*])*mm[0]
+    endfor
+  endfor
+
+endif else begin
 
 
+  for i=0,nap-1 do begin
+    for j=0,np-1 do vs[i,j]=total(vf2[left[i,j]+dleft:right[i,j]+dright,j])
+  endfor
+
+  for i=0,nap-1 do begin
+    for j=0,np-1 do begin
+      s[i,j]=total(f2[left[i,j]+dleft:right[i,j]+dright,j])
+    endfor
+  endfor
+
+endelse
 
 end
