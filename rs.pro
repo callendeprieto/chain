@@ -48,8 +48,6 @@ if keyword_set(plot) then begin
 	wobject=where(strpos(hd,'OBJECT') gt -1)
 	if min(wobject) gt -1 then wobject=min(wobject) else wobject=6
 
-	help,w,f,order
-	
 	plot,findgen(npix),s[order-1,*]/mean(s[order-1,*])+order-1,$
 	yrange=[0,norder+1],$
 	ytitle='Aperture',title=hd(wobject),$
