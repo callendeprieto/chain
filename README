@@ -1,0 +1,39 @@
+
+HORuS chain
+
+This an IDL/GDL pipeline for reducing the data from the HORuS spectrograph on the 10.4-m Gran Telescopio Canarias (GTC). HORuS is a high-resolution (R=25,000) wide-coverage (380-700 nm, with gaps in the red), fiber-fed, echelle spectrograph. HORuS had a previous life as the Utrech Echelle Spectrograph (UES) on the 4.2-m William Herschel Telescope in La Palma. UES was decommissioned in 1997, and later donated to the IAC, where was transformed into HORuS in 2010-2016. The instrument is available on GTC since January 2019. 
+
+This Chain is a project to produce a fully automated pipeline for reducing echelle spectra, applied first to HORuS. It performs bias removal, cosmic ray cleaning, order tracing, extraction, and wavelength calibration. The list of things to improve is not short, but slow and continuous progress is happening:
+
+-sky subtraction: tough since the standard binning is fairly agressive and there is only one sky fiber.
+-wavelength calibration: currently a 4th or 5th order polynomial is used for each order, but it would be better to do a 2D calibration for all orders at once.
+-optimal extraction: so far the signal is added (but working on this as of January 2020).
+-RV determination: Yeisson Osorio is starting on a separate package for this
+-continuum normalization and order merging: not clear the latter is a good idea, but so far the former is achieved by simply dividing the extracted spectra by the extracted flatfield. 
+-1x1 (unbinned) data: coming soon ... but the focus lately has been on 8x2 binniing data, which is the vast majority.
+
+This software was created by me, Carlos Allende Prieto, and it is distributed under the MIT license. It uses a bunch of open software tools: GDL, la_cosmic implementing Pieter van Dokkum's algorithm (implemented by Josh Bloom), the IDL astro library, and other things I'm probably forgetting.
+
+You need to first have  IDL or GDL installed. GDL is open source and can be installed easily in linux machines: in ubuntu just type
+
+sudo apt-get install gnudatalanguage
+
+
+Then you need to install the IDL astro library
+
+https://idlastro.gsfc.nasa.gov/
+
+and the chain itself, which can be obtained by typing 
+
+git clone https://github.com/callendeprieto/chain chain
+
+Try reducing your data (2x8 binned observations) by entering IDL/GDL in the directory where the all the input FITS files are and typing
+
+GDL> chain
+
+Among the output you will find a 'logfile' describing what data have been found and what processing has been done to them, x*fits files with the extracted 2D (27 orders x 2048 wavelengths) wavelength-calibrated spectra, and n*fits files, which are identical to the x*fits but with the edges trimmed and divided by the flatfield to approximately remove the instrumental response (blaze function).
+
+
+Tenerife, January 2020
+Carlos
+
