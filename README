@@ -14,6 +14,8 @@ This Chain is a project to produce a fully automated pipeline for reducing echel
 
 This software was created by me, Carlos Allende Prieto, and it is distributed under the MIT license. It uses a bunch of open software tools: GDL, la_cosmic implementing Pieter van Dokkum's algorithm (implemented by Josh Bloom), the IDL astro library, and other things I'm probably forgetting.
 
+-- Reducing the data
+
 You need to first have  IDL or GDL installed. GDL is open source and can be installed easily in linux machines: in ubuntu just type
 
 sudo apt-get install gnudatalanguage
@@ -32,6 +34,19 @@ Try reducing your data (2x8 binned observations) by entering IDL/GDL in the dire
 GDL> chain
 
 Among the output you will find a 'logfile' describing what data have been found and what processing has been done to them, x*fits files with the extracted 2D (27 orders x 2048 wavelengths) wavelength-calibrated spectra, and n*fits files, which are identical to the x*fits but with the edges trimmed and divided by the flatfield to approximately remove the instrumental response (blaze function).
+
+
+-- Reading the data
+
+Included in the chain you'll find the utility rs.pro which allows reading the x*fits or n*fits data products from the pipeline
+
+GDL> rs,'x0002326040-20191011-HORS-Spectroscopy.fits',y,w=x,/pl
+
+you can easily read the data in python using the attached horus.py script
+
+from horus import rs,hs
+x,y,v = rs('x0002326040-20191011-HORS-Spectroscopy.fits')
+
 
 
 Tenerife, January 2020
