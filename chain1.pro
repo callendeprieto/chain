@@ -1,5 +1,8 @@
-pro chain1,logfile=logfile
+pro chain1,chaindir=chaindir,logfile=logfile
 
+;basic dir/files
+home=getenv('HOME')
+if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 if not keyword_set(logfile) then logfile='logfile'
 
 ;make data inventory 
@@ -68,11 +71,11 @@ if (1 eq 0) then begin
   endif
 endif else begin
 ; or we take it from a reference image and use a ref flat to find the appropropriate offset
-  ap1=readfits('/home/callende/idl/chain/rap1.fits')
-  ap=readfits('/home/callende/idl/chain/rap.fits')
+  ap1=readfits(chaindir+'/rap1.fits')
+  ap=readfits(chaindir+'/rap.fits')
 
   ;derive spatial-direction offset of orders using flat
-  rflat=readfits('/home/callende/idl/chain/rflat.fits')
+  rflat=readfits(chaindir+'/rflat.fits')
   trflat=total(rflat,2)
   tflat=total(f,2)
   ;if not keyword_set(bin) then tflat=rebin(tflat,514)
@@ -159,7 +162,7 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'calibrating ... '+'x'+st[wcal[i]].filename
   print,'calibrating ... '+'x'+st[wcal[i]].filename
   rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
-  xcal, xframe, wframe, /bin,calstats=cs
+  xcal, xframe, wframe, /bin,calstats=cs, chaindir=chaindir
   print,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
                                       max(cs[6,*]/cs[2,*]),')'
 

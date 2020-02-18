@@ -1,4 +1,4 @@
-pro  xcal,c,x,calstats=calstats,bin=bin
+pro  xcal,c,x,calstats=calstats,bin=bin,chaindir=chaindir
 
 ;
 ;	IN:  c -float array 	Collapsed ThAr spectrum
@@ -9,6 +9,9 @@ pro  xcal,c,x,calstats=calstats,bin=bin
 ;
 ;			where yerrorN is the uncertainty for a N-th order polynomial calib.
 ;			bin - integer	Set to indicate 8x2 binning
+;
+;			chaindir - string  Path to the chain (both software and reference files)
+;
 
 
 ptol=8.0 ; pixels from the expected location to accept a line fit
@@ -19,8 +22,11 @@ calstats=dblarr(7,27)
 nx=4096
 if keyword_set(bin) then nx=nx/2
 
+home=getenv('HOME')
+if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
+
 x=dblarr(27,nx)
-openr,11,'/home/callende/idl/chain/hors_thar.dat'
+openr,11,chaindir+'/hors_thar.dat'
 for i=0,26 do begin
 
 

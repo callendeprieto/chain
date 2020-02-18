@@ -1,4 +1,4 @@
-pro hql,im,x,y,palette=palette
+pro hql,im,x,y,palette=palette,chaindir=chaindir
 
 ;+
 ;  HORuS quick-look extraction
@@ -12,6 +12,11 @@ if n_params() lt 1 then begin
 endif
 
 if not keyword_set(palette) then palette=12
+
+;basic dir/files
+home=getenv('HOME')
+if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
+
 
 ;read image, convert to e-, and compute variance
 d=readfits(im,hd)
@@ -45,7 +50,7 @@ vd=d+rdnoise^2
 
 ;default apertures
 idisp=2
-ap1=readfits('/home/callende/idl/chain/rap1.fits',0,hd)
+ap1=readfits(chaindir+'/rap1.fits',0,hd)
 if bin eq 1 then ap1=ap1/3. else ap1=ap1/3./8.
 
 
@@ -57,7 +62,7 @@ norder=27
 npix=4096
 if bin then npix=npix/2
 w=dblarr(norder,npix)
-openr,11,'/home/callende/idl/chain/hors_thar.dat'
+openr,11,chaindir+'/hors_thar.dat'
 for i=0,26 do begin
   readf,11,i2,nlines,order
   coef=dblarr(order+1)

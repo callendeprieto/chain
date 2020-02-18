@@ -1,4 +1,9 @@
-pro mkrflat,sky,flat
+pro mkrflat,sky,flat, chaindir=chaindir
+
+;basic dir/files
+home=getenv('HOME')
+if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
+
 
 f = readfits(flat)
 ;o = readfits('0002326127-20191011-HORS-Spectroscopy.fits',hd)
@@ -8,8 +13,8 @@ hbias,f,/bin
 hbias,s,/bin
 
 dispdir,f,idisp
-ap1=readfits('/home/callende/idl/chain/rap1.fits')
-rflat=readfits('/home/callende/idl/chain/rflat.fits')
+ap1=readfits(chaindir+'/rap1.fits')
+rflat=readfits(chaindir+'/rflat.fits')
 trflat=total(rflat,2)
 tflat=total(f,2)
 xc,trflat,tflat,trflat/100.,tflat/100.,fshift,efshift
