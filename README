@@ -30,27 +30,27 @@ Then you need to install the IDL astro library (see https://idlastro.gsfc.nasa.g
 
 and download the software inside that directory using, for example, git
 
-  git clone git://github.com/wlandsman/idlastro astro
+  git clone https://github.com/wlandsman/idlastro astro
   git clone https://github.com/callendeprieto/chain chain
 
 To get the libraries in your idl/gdl path you need to create a startupfile
 
-  echo "device,decompose=0" > $HOME/idl/.idl_startup
-  echo "!PATH= Expand_Path('+~/idl:')  + !PATH" >> $HOME/idl/.idl_startup
+  echo 'device,decompose=0' > $HOME/idl/.idl_startup
+  echo '!PATH= Expand_Path("+~/idl:\")  + !PATH' >> $HOME/idl/.idl_startup
 
-and set an environmental variable that points to that file by adding to your $HOME/.bashrc file (assuming you are using bash) the following line
+and set an environmental variable that points to that file (assuming you are using bash)
 
-  export IDL_STARTUP=$HOME/idl/.idl_startup
+  echo 'export IDL_STARTUP=$HOME/idl/.idl_startup' >> $HOME/.bashrc
 
-(cshell users will need instead this other line
-  setenv IDL_STARTUP $HOME/idl/.idl_startup
-in their $HOME/.cshrc file)
+(cshell users will instead do
+  echo 'setenv IDL_STARTUP $HOME/idl/.idl_startup' >> $HOME/.cshrc  
+ )
 
 Then source your rc file
 
   source $HOME/.bashrc
 
-and if the install has succeded you should be able to 'find' the chain code from any directory in your computer. Try (replacing 'gdl' by 'idl' for IDL users) the following, and if the answers you get are similar to those following '-->' you're all set to run the chain
+If the install has succeded you should be able to 'find' the chain code from any directory in your computer. Try (replacing 'gdl' by 'idl' for IDL users) the following, and if the answers you get are similar to those following '-->' you're all set to run the chain
 
   which gdl
    --> /usr/bin/gdl 
