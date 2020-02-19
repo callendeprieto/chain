@@ -199,7 +199,7 @@ for i=0,n_elements(wspe)-1 do begin
   print,'x'+st[wspe[i]].filename+'  mjd=',st[wspe[i]].mjd0
   rs, 'x'+st[wspe[i]].filename, xframe, xvframe, norder=norder, hd=header
   ;creject, xframe, xframe2
-  xframe = xframe2
+  ;xframe = xframe2
   wpre = max(where(st[wspe[i]].mjd0-calmjd gt 0.))
   wpos = min(where(st[wspe[i]].mjd0-calmjd lt 0.))
   if max(wpre) gt -1 then begin  
