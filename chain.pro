@@ -124,7 +124,7 @@ for i=0,n_elements(wspe)-1 do begin
     gain=sxpar(header,'gain')
     rdnoise=sxpar(header,'rdnoise')
     writefits,'tmp.fits',frame,header
-    la_cosmic,'tmp.fits',gain=gain,readn=rdnoise,sigfrac=20.,sigclip=4.5
+    la_cosmic,'tmp.fits',gain=gain,readn=rdnoise,sigfrac=30.,sigclip=4.5
     frame = readfits('tmp-out.fits')
     file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
   endif
