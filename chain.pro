@@ -261,5 +261,8 @@ for i=0,n_elements(wspe)-1 do begin
 endfor
 close,10
 
+;create plots
+mkpng
+
 end
 

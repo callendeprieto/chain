@@ -1,4 +1,4 @@
-pro rs,infile,s,vs,w=w,norder=norder,npix=npix,hd=hd,plot=plot
+pro rs,infile,s,vs,w=w,norder=norder,npix=npix,hd=hd,plot=plot,fcol=fcol,bcol=bcol
 ;+
 ;	Reads a FITS echelle spectrum
 ;
@@ -13,6 +13,8 @@ pro rs,infile,s,vs,w=w,norder=norder,npix=npix,hd=hd,plot=plot
 ;		  hd	 - strarr	header
 ;		  plot	 - 		produces a plot of the spectr. on demand
 ;                  w     - double        wavelength matrix (npix x norder)
+;                  fcol  -  byte        color for lines in plot
+;                  bcol  -  byte        color for background in plot
 ;
 ;-
 
@@ -20,6 +22,10 @@ if N_params() LT 1 then begin
       print,'% rs: - rs,infile,s,vs[,w=w,norder=norder,npix=npix,hd=hd,plot=plot]'
       return
 endif
+
+;colors
+if n_elements(fcol) eq 0 then fcol=0
+if n_elements(bcol) eq 0 then bcol=255
 
 ;reading the data
 f=readfits(infile,hd)
@@ -52,20 +58,20 @@ if keyword_set(plot) then begin
 	yrange=[0,norder+1],$
 	ytitle='Aperture',title=hd(wobject),$
 	charsize=1.2,xcharsize=.01,xrange=[-npix*0.2,npix*1.2],$
-	xstyle=1,ystyle=1,col=0,back=255
-	xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,col=0
-	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=0
+	xstyle=1,ystyle=1,col=fcol,back=bcol
+	xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,col=fcol
+	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
 	xyouts,npix,1,$
-	w[order-1,npix-1],charsize=1.3,col=0
+	w[order-1,npix-1],charsize=1.3,col=fcol
 	
 	for order=2,norder do begin
 		oplot,findgen(npix),s[order-1,*]/mean(s[order-1,*])+order-1,$
-			col=0
+			col=fcol
        		xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,$
-			col=0
-        	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=0
+			col=fcol
+        	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
         	xyouts,npix,order,$
-        	w[order-1,npix-1],charsize=1.3,col=0
+        	w[order-1,npix-1],charsize=1.3,col=fcol
 
 	endfor
 endif

@@ -17,7 +17,7 @@ if strlen(files[0]) eq 0 then begin
   files=file_search('../*/0*fits')
   if n_elements(files) eq 1 then begin
   if strlen(files[0]) eq 0 then begin
-    print,'% INVENTORY: Cannot find 0*fits files'
+    print,'% INVENTORY: Cannot find ../*/0*fits files'
     print,'%            Giving up  ...'
     return
   endif
