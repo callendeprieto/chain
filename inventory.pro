@@ -10,6 +10,21 @@ pro	inventory,st,verbose=verbose,bin=bin
 
 
 files=file_search('0*fits')
+if n_elements(files) eq 1 then begin
+if strlen(files[0]) eq 0 then begin
+  print,'% INVENTORY: Cannot find 0*fits files in the current directory'
+  print,'%            Searching for data in ../*/0*fits  ...'
+  files=file_search('../*/0*fits')
+  if n_elements(files) eq 1 then begin
+  if strlen(files[0]) eq 0 then begin
+    print,'% INVENTORY: Cannot find 0*fits files'
+    print,'%            Giving up  ...'
+    return
+  endif
+  endif
+endif
+endif
+
 for i=0,n_elements(files)-1 do begin
 
   info=file_info(files[i])
@@ -23,6 +38,7 @@ for i=0,n_elements(files)-1 do begin
   endelse
 
   ;read data and header
+  print,'reading '+files[i]
   d=mrdfits(files[i],0,hd)
 
   ;extract info from header
@@ -62,6 +78,7 @@ for i=0,n_elements(files)-1 do begin
   ;dstddev=stddev(d)
 
 endfor
+
 
 if n_elements(st) eq 0 then begin
   print,'% INVENTORY: -- no data available for the specified binning size'

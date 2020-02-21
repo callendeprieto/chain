@@ -33,6 +33,7 @@ wspe=where(strmid(st.obstype,0,3) eq 'Spe')
 wfla=where(strmid(st.obstype,0,3) eq 'Fla')
 wob=[wcal,wspe]
 
+
 ;have got enough data?
 if max(wcal) lt 0 then begin
   print,'% CHAIN2: no Cal images available, I quit' 
@@ -119,7 +120,8 @@ printf,10,'removing cosmics and scattered light and extracting spes ...'
 print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
-  frame = float(readfits(st[j].filename,header))
+  filename=st[j].filename
+  frame = float(readfits(filename,header))
   if st[j].exptime gt 900. then begin
     gain=sxpar(header,'gain')
     rdnoise=sxpar(header,'rdnoise')
@@ -133,12 +135,13 @@ for i=0,n_elements(wspe)-1 do begin
   frame = frame - back
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
-  printf,10,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
-  print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  printf,10,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  print,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
-  ws, 'x'+st[j].filename, xframe, xvframe, hd=header
+  xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  ws, xfilename, xframe, xvframe, hd=header
 endfor
 
 ;extract cals
@@ -146,16 +149,18 @@ printf,10,'extracing cals ...'
 print,'extracing cals ...'
 for i=0,n_elements(wcal)-1 do begin
   j=wcal[i]
-  frame = readfits(st[j].filename,header)
+  filename=st[j].filename
+  frame = readfits(filename,header)
   hbias,frame,rdn=rdn,/bin
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
-  printf,10,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
-  print,st[j].filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  printf,10,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
+  print,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
-  ws, 'x'+st[j].filename, xframe, xvframe, hd=header
+  xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  ws, xfilename, xframe, xvframe, hd=header
 endfor
 
 
@@ -163,9 +168,12 @@ endfor
 printf,10,'wavelength calibration of cals ...'
 print,'wavelength calibration of cals ...'
 for i=0,n_elements(wcal)-1 do begin
-  printf,10,'calibrating ... '+'x'+st[wcal[i]].filename
-  print,'calibrating ... '+'x'+st[wcal[i]].filename
-  rs, 'x'+st[wcal[i]].filename, xframe, xvframe, hd=header
+  j=wcal[i]
+  filename=st[j].filename
+  xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  printf,10,'calibrating ... '+xfilename
+  print,'calibrating ... '+xfilename
+  rs, xfilename, xframe, xvframe, hd=header
   xcal, xframe, wframe, /bin,calstats=cs, chaindir=chaindir
   print,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
                                       max(cs[6,*]/cs[2,*]),')'
@@ -173,13 +181,13 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
                                       max(cs[6,*]/cs[2,*]),')'
 
-  ws, 'x'+st[wcal[i]].filename, xframe, xvframe, w = wframe, hd=header
+  ws, xfilename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin
-    calfiles = 'x'+st[wcal[i]].filename
-    calmjd = st[wcal[i]].mjd0
+    calfiles = xfilename
+    calmjd = st[j].mjd0
   endif else begin
-    calfiles = [ calfiles, 'x'+st[wcal[i]].filename ]
-    calmjd = [ calmjd, st[wcal[i]].mjd0 ]  
+    calfiles = [ calfiles, xfilename ]
+    calmjd = [ calmjd, st[j].mjd0 ]  
   endelse
 endfor
 
@@ -193,15 +201,19 @@ print,calmjd
 
 ;spec
 for i=0,n_elements(wspe)-1 do begin
+  j=wspe[i]
+  filename=st[j].filename
+  xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  nfilename='n'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
   printf,10,'calibrating ... '
   print,'calibrating ... '
-  printf,10,'x'+st[wspe[i]].filename+'  mjd=',st[wspe[i]].mjd0
-  print,'x'+st[wspe[i]].filename+'  mjd=',st[wspe[i]].mjd0
-  rs, 'x'+st[wspe[i]].filename, xframe, xvframe, norder=norder, hd=header
+  printf,10,xfilename+'  mjd=',st[j].mjd0
+  print,xfilename+'  mjd=',st[j].mjd0
+  rs, xfilename, xframe, xvframe, norder=norder, hd=header
   creject, xframe, xframe2
   xframe = xframe2
-  wpre = max(where(st[wspe[i]].mjd0-calmjd gt 0.))
-  wpos = min(where(st[wspe[i]].mjd0-calmjd lt 0.))
+  wpre = max(where(st[j].mjd0-calmjd gt 0.))
+  wpos = min(where(st[j].mjd0-calmjd lt 0.))
   if max(wpre) gt -1 then begin  
     printf,10,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
     print,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
@@ -214,7 +226,7 @@ for i=0,n_elements(wspe)-1 do begin
   endif
 
   if max(wpre) gt -1 and max(wpos) gt -1 then begin
-    d = (st[wspe[i]].mjd0 - calmjd[wpre] ) / (calmjd[wpos] - calmjd[wpre] )
+    d = (st[j].mjd0 - calmjd[wpre] ) / (calmjd[wpos] - calmjd[wpre] )
   endif else begin
 	if max(wpre) gt -1 and max(wpos) lt  0 then d=0.
  	if max(wpre) lt  0 and max(wpos) gt -1 then d=1.
@@ -227,13 +239,13 @@ for i=0,n_elements(wspe)-1 do begin
         if abs(d) lt 1.e-7 then w2=w1
         if abs(d-1.) lt 1.e-7 then w1=w2
   	wframe = (1. - d) * w1 + d * w2 
-  	ws, 'x'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
+  	ws, xfilename, xframe, xvframe, w = wframe, hd=header
 
 	;normalize by the flatfield
-	for j=0,norder-1 do begin
-	  ratio = 1.0d0 ; median(xf[j,*])/median(xframe[j,*])
-	  xframe[j,*] = xframe[j,*] / xf[j,*] * ratio 
-	  xvframe[j,*] = xvframe[j,*] / xf[j,*]^2 * ratio^2
+	for k=0,norder-1 do begin
+	  ratio = 1.0d0 ; median(xf[k,*])/median(xframe[k,*])
+	  xframe[k,*] = xframe[k,*] / xf[k,*] * ratio 
+	  xvframe[k,*] = xvframe[k,*] / xf[k,*]^2 * ratio^2
 	endfor
 
 	;trim
@@ -243,7 +255,7 @@ for i=0,n_elements(wspe)-1 do begin
 	xvframe = xvframe[*,margin:np-1-margin]
         wframe = wframe[*,margin:np-1-margin]
 
-	ws, 'n'+st[wspe[i]].filename, xframe, xvframe, w = wframe, hd=header
+	ws, nfilename, xframe, xvframe, w = wframe, hd=header
 
   endelse
 endfor
