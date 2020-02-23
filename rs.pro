@@ -50,7 +50,7 @@ endelse
 ;picture it
 if keyword_set(plot) then begin
 	order=1
-	step_1=median(w[*,0]-shift(w[*,0],1))
+	;step_1=median(w[*,0]-shift(w[*,0],1))
 	wobject=where(strpos(hd,'OBJECT') gt -1)
 	if min(wobject) gt -1 then wobject=min(wobject) else wobject=6
 
@@ -59,19 +59,27 @@ if keyword_set(plot) then begin
 	ytitle='Aperture',title=hd(wobject),$
 	charsize=1.2,xcharsize=.01,xrange=[-npix*0.2,npix*1.2],$
 	xstyle=1,ystyle=1,col=fcol,back=bcol
-	xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,col=fcol
-	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
-	xyouts,npix,1,$
-	w[order-1,npix-1],charsize=1.3,col=fcol
+
+        if n_elements(w) gt 0 then begin
+	  xyouts,.42,.05,'Wavelength (nm)',/normal,charsize=1.5,col=fcol
+	  xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
+	  xyouts,npix,1,$
+	  w[order-1,npix-1],charsize=1.3,col=fcol
+        endif else begin
+          xyouts,.45,.05,'Wavelength',/normal,charsize=1.5,col=fcol
+        endelse
+
 	
 	for order=2,norder do begin
 		oplot,findgen(npix),s[order-1,*]/mean(s[order-1,*])+order-1,$
 			col=fcol
-       		xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,$
-			col=fcol
-        	xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
-        	xyouts,npix,order,$
-        	w[order-1,npix-1],charsize=1.3,col=fcol
+       		;xyouts,.4,.05,'Wavelength (Angstroms)',/normal,charsize=1.5,$
+	        ;		col=fcol
+                if n_elements(w) gt 0 then begin
+        	  xyouts,-npix*0.2,order,w[order-1,0],charsi=1.3,col=fcol
+        	  xyouts,npix,order,$
+        	  w[order-1,npix-1],charsize=1.3,col=fcol
+                endif
 
 	endfor
 endif

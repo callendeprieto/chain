@@ -26,10 +26,23 @@ for i=1,norder-1 do begin
 	wx=where(x2 ge min(x[i,*]))
 	if max(x[i,*]) lt min(x2) then continue
         if max(wx) gt -1 then begin
+
+                data=interpol(y[i,woverlap],x[i,woverlap],x2[wx])
+                var=interpol(v[i,woverlap],x[i,woverlap],x2[wx])
+                scale=mean(data/y2[wx])
+                loadct,12
+                plot,x2,y2,xr=[max(x2)-10.,max(x[i,woverlap])+10.]
+                oplot,x2[wx],data,col=100
+                oplot,x2[wx],data/scale,col=180
+                stop
+
+                data=data/scale
+                var=var/scale^2
 		;y2[wx]=(y2[wx]/v2[wx]+interpol(y[i,woverlap]/v[i,woverlap],x[i,woverlap],x2[wx]))/$
 		;(1./v2[wx]+interpol(1./v[i,woverlap],x[i,woverlap],x2[wx]))
 		;y2[wx]=(y2[wx]+interpol(y[i,woverlap],x[i,woverlap],x2[wx]))/2.
-		y2[wx]=y2[wx]+interpol(y[i,woverlap],x[i,woverlap],x2[wx])
+		y2[wx]=(y2[wx]+data)/2.
+                v2[wx]=v2[wx]+var/4.
 		wnew=where(x[i,*] gt max(x2))
 		;help,x2,x[i,wnew]
 		x2=[x2,transpose(x[i,wnew])]
