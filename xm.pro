@@ -25,9 +25,9 @@ for i=0,norder-1 do begin
   ;coef=poly_fit(findgen(n_elements(c)),c,8,yfit=c2)
   ;oplot,c,col=100
   ;oplot,c2,col=180
-  if i lt 14 then corder=5 else corder=8
-  continuum,corder,10,0.1,5.,yy2[i,*],c3
-  oplot,c3,col=180,thick=2 
+  if i lt 14 then corder=6 else corder=9
+  continuum,corder,10,1.,5.,yy2[i,*],c3
+  oplot,c3,col=180,thick=3
   ;stop
   yy2[i,*]=yy2[i,*]/c3
   vv2[i,*]=vv2[i,*]/c3^2
