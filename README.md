@@ -11,7 +11,7 @@ This chain is a project to produce a fully automated pipeline for reducing echel
 - continuum normalization and order merging: not clear the latter is a good idea, but so far the former is achieved by simply dividing the extracted spectra by the extracted flatfield. 
 - 1x1 (unbinned) data: coming soon ... but the focus lately has been on 8x2 binniing data, which is the vast majority.
 
-This software was created by Carlos Allende Prieto and it is distributed under the MIT license. It uses a bunch of open software tools: GDL, la_cosmic implementing Pieter van Dokkum's algorithm (written by Josh Bloom), the IDL astro library, and other things I'm probably forgetting.
+This software was created by Carlos Allende Prieto and it is distributed under the MIT license. It uses a bunch of open software tools: GDL, la_cosmic implementing Pieter van Dokkum's algorithm (written by Josh Bloom), the IDL astro library, the Coyote library, and other things I'm probably forgetting.
 
 ### Installing the chain
 
@@ -65,6 +65,7 @@ If the install has succeded you should be able to 'find' the chain code from any
    --> /home/callende/idl/.idl_startup
 
   cat $IDL_STARTUP
+
    --> device,decompose=0
 
    --> !PATH= "/home/callende/idl/chain:/home/callende/idl/astro/pro:/home/callende/idl/coyote:/home/callende/idl/coyote/public:"  + !PATH
