@@ -23,76 +23,76 @@ You need to first have  IDL or GDL installed. GDL is open source and can be inst
 
 Then you need to install the IDL astro library (see https://idlastro.gsfc.nasa.gov/), and the chain itself. For that, create a directory in your home for installing idl libraries
 
-  cd $HOME
+  `cd $HOME`
 
-  mkdir idl
+  `mkdir idl`
 
-  cd idl 
+  `cd idl`
 
 and download the software inside that directory using, for example, git
 
-  git clone https://github.com/wlandsman/idlastro astro
+  `git clone https://github.com/wlandsman/idlastro astro`
 
-  git clone https://github.com/idl-coyote/coyote coyote
+  `git clone https://github.com/idl-coyote/coyote coyote`
 
-  git clone https://github.com/callendeprieto/chain chain
+  `git clone https://github.com/callendeprieto/chain chain`
 
 To get the libraries in your idl/gdl path you need to create a startupfile
 
-  echo 'device,decompose=0' > $HOME/idl/.idl_startup
+  `echo 'device,decompose=0' > $HOME/idl/.idl_startup`
 
-  echo '!PATH= "'$HOME'/idl/chain:'$HOME'/idl/astro/pro:'$HOME'/idl/coyote:'$HOME'/idl/coyote/public:"  + !PATH'  >> .idl_startup
+  `echo '!PATH= "'$HOME'/idl/chain:'$HOME'/idl/astro/pro:'$HOME'/idl/coyote:'$HOME'/idl/coyote/public:"  + !PATH'  >> .idl_startup`
 
 
 and set an environmental variable that points to that file (assuming you are using bash)
 
-  echo 'export IDL_STARTUP=$HOME/idl/.idl_startup' >> $HOME/.bashrc
+  `echo 'export IDL_STARTUP=$HOME/idl/.idl_startup' >> $HOME/.bashrc`
 
 (cshell users will instead do
-  echo 'setenv IDL_STARTUP $HOME/idl/.idl_startup' >> $HOME/.cshrc  
+  `echo 'setenv IDL_STARTUP $HOME/idl/.idl_startup' >> $HOME/.cshrc`  
  )
 
 Then source your rc file
 
-  source $HOME/.bashrc
+  `source $HOME/.bashrc`
 
 If the install has succeded you should be able to 'find' the chain code from any directory in your computer. Try (replacing 'gdl' by 'idl' for IDL users) the following, and if the answers you get are similar to those following '-->' you're all set to run the chain
 
-  which gdl
+  `which gdl`
    --> /usr/bin/gdl 
 
-  echo $IDL_STARTUP
+  `echo $IDL_STARTUP`
    --> /home/callende/idl/.idl_startup
 
-  cat $IDL_STARTUP
+  `cat $IDL_STARTUP`
 
    --> device,decompose=0
 
    --> !PATH= "/home/callende/idl/chain:/home/callende/idl/astro/pro:/home/callende/idl/coyote:/home/callende/idl/coyote/public:"  + !PATH
 
 
-  cd $HOME
+  `cd $HOME`
 
-  gdl 
+  `gdl` 
 
-  GDL> .r chain
+  GDL> `.r chain`
   --> % Compiled module: CHAIN
 
-  GDL> .r readfits
+  GDL> `.r readfits`
   --> % Compiled module: READFITS.
 
-  GDL> print,!PATH
+  GDL> `print,!PATH`
   --> /home/callende/idl/chain:/home/callende/idl/astro/pro:/home/callende/idl/coyote:/home/callende/idl/coyote/public:/usr/share/gnudatalanguage/lib/dicom:/usr/share/gnudatalanguage/lib/envi:/usr/share/gnudatalanguage/lib
 
 
-  GDL> exit 
+  GDL> `exit`
 
 
 ### Reducing the data
 
 Try reducing your data (2x8 binned observations) by entering IDL/GDL in the directory where the all the input FITS files are and typing
 
-  GDL> chain
+  GDL> `chain`
 
 Among the output you will find a 'logfile' describing what data have been found and what processing has been done to them, x*fits files with the extracted 2D (27 orders x 2048 wavelengths) wavelength-calibrated spectra, and n*fits files, which are identical to the x*fits but with the edges trimmed and divided by the flatfield to approximately remove the instrumental response (blaze function).
 
@@ -101,13 +101,13 @@ Among the output you will find a 'logfile' describing what data have been found 
 
 Included in the chain you'll find the utility rs.pro which allows reading the x*fits or n*fits data products from the pipeline
 
-  GDL> rs,'x0002326040-20191011-HORS-Spectroscopy.fits',y,w=x,/pl
+  GDL> `rs,'x0002326040-20191011-HORS-Spectroscopy.fits',y,w=x,/pl`
 
 you can easily read the data in python using the attached horus.py script
 
-  from horus import rs,hs
+  `from horus import rs,hs`
 
-  x,y,v = rs('x0002326040-20191011-HORS-Spectroscopy.fits')
+  `x,y,v = rs('x0002326040-20191011-HORS-Spectroscopy.fits')`
 
 
 
