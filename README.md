@@ -17,7 +17,7 @@ This software was created by Carlos Allende Prieto and it is distributed under t
 
 You need to first have  IDL or GDL installed. GDL is open source and can be installed easily in linux machines: in ubuntu/debian just type
 
-  sudo apt-get install gnudatalanguage
+  `sudo apt-get install gnudatalanguage`
 
 (fedora users would need replace 'apt-get' by 'yum', and macports users by 'ports')
 
