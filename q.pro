@@ -1,6 +1,6 @@
 pro q
 
-print,'%Q: exiting ...'
+print,'% Exiting ...'
 exit
 
 end
