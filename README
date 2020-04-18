@@ -38,7 +38,6 @@ and download the software inside that directory using, for example, git
 To get the libraries in your idl/gdl path you need to create a startupfile
 
   echo 'device,decompose=0' > $HOME/idl/.idl_startup
-  echo '!PATH= Expand_Path("+~/idl:\")  + !PATH' >> $HOME/idl/.idl_startup
   echo '!PATH= "'$HOME'/idl/chain:'$HOME'/idl/astro/pro:'$HOME'/idl/coyote:'$HOME'/idl/coyote/public:"  + !PATH'  >> .idl_startup
 
 and set an environmental variable that points to that file (assuming you are using bash)
