@@ -81,6 +81,10 @@ If the install has succeded you should be able to 'find' the chain code from any
   GDL> .r readfits
   --> % Compiled module: READFITS.
 
+  GDL> print,!PATH
+  --> /home/callende/idl/chain:/home/callende/idl/astro/pro:/home/callende/idl/coyote:/home/callende/idl/coyote/public:/usr/share/gnudatalanguage/lib/dicom:/usr/share/gnudatalanguage/lib/envi:/usr/share/gnudatalanguage/lib
+
+
   GDL> exit 
 
 
