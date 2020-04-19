@@ -141,6 +141,9 @@ for i=0,n_elements(wspe)-1 do begin
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
+  hheader,header 
+  ;write extratcted file
   ws, xfilename, xframe, xvframe, hd=header
 endfor
 
@@ -160,6 +163,9 @@ for i=0,n_elements(wcal)-1 do begin
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
+  hheader,header 
+  ;write extratcted file
   ws, xfilename, xframe, xvframe, hd=header
 endfor
 
