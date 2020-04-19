@@ -24,6 +24,6 @@ data=s/sqrt(vs)
 display,transpose(data),charsize=1e-4
 xyouts,0.2,0.2,'S/N',charsi=2,col=255,/norm
 xyouts,0.1,0.1,infile,charsi=2,col=255,/norm
-colorbar,maxrange=max(data)
+cgcolorbar,maxrange=max(data)
 
 end
