@@ -16,7 +16,10 @@ if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 hostname=getenv('HOST')
 pwd=getenv('PWD')
 user=getenv('USER')
-load,chaindir+'/version.txt',version
+version=''
+openr,lun,chaindir+'/version.txt',/get_lun
+readf,lun,version
+close,lun
 
 ra=sxpar(hd,'radeg')
 dec=sxpar(hd,'decdeg')
