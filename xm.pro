@@ -70,7 +70,7 @@ case xmformat of
             end
      else: begin
              print,'% XM: xmformat not recognized -- valid options are:'
-             print,'% XM:      'vo', 'three-col', 'rana'
+             print,'% XM:      vo, three-col, rana'
            end
 endcase
 
