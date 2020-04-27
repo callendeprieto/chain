@@ -1,9 +1,13 @@
-pro chain,chaindir=chaindir,logfile=logfile
+pro chain,chaindir=chaindir
 
 ;basic dir/files
 home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
-if not keyword_set(logfile) then logfile='logfile'
+logfile='logfile'
+
+;params
+la_minexptime=900; min. exp. time to activate la_cosmic cosmic removal
+xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
 ;make data inventory 
 inventory,st,/bin
@@ -122,7 +126,7 @@ for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   filename=st[j].filename
   frame = float(readfits(filename,header))
-  if st[j].exptime gt 900. then begin
+  if st[j].exptime gt la_minexptime then begin
     gain=sxpar(header,'gain')
     rdnoise=sxpar(header,'rdnoise')
     writefits,'tmp.fits',frame,header
@@ -246,6 +250,9 @@ for i=0,n_elements(wspe)-1 do begin
         if abs(d-1.) lt 1.e-7 then w1=w2
   	wframe = (1. - d) * w1 + d * w2 
   	ws, xfilename, xframe, xvframe, w = wframe, hd=header
+
+        ;normalize and order merge to create the m* files
+        if xmformat ne '' then xm, xfilename,xmformat=xmformat
 
 	;normalize by the flatfield
 	for k=0,norder-1 do begin
