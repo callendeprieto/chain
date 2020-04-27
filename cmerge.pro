@@ -41,10 +41,10 @@ for i=1,norder-1 do begin
                 data=interpol(yy[woverlap],xx[woverlap],x2[wx])
                 var=interpol(vv[woverlap],xx[woverlap],x2[wx])
                 scale=mean(data/y2[wx])
-                loadct,12
-                plot,x2,y2,xr=[max(x2)-10.,max(xx[woverlap])+10.]
-                oplot,x2[wx],data,col=100
-                oplot,x2[wx],data/scale,col=180
+                ;loadct,12
+                ;plot,x2,y2,xr=[max(x2)-10.,max(xx[woverlap])+10.]
+                ;oplot,x2[wx],data,col=100
+                ;oplot,x2[wx],data/scale,col=180
                 data=data/scale
                 var=var/scale^2
 		;y2[wx]=(y2[wx]/v2[wx]+interpol(y[i,woverlap]/v[i,woverlap],x[i,woverlap],x2[wx]))/$
