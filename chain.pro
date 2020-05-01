@@ -6,7 +6,7 @@ if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 logfile='logfile'
 
 ;params
-la_minexptime=900; min. exp. time to activate la_cosmic cosmic removal
+la_minexptime=900000; min. exp. time to activate la_cosmic cosmic removal
 xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
 ;make data inventory 

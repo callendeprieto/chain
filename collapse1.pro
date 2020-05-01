@@ -24,10 +24,11 @@ if idisp eq 1 then xdisp=2
 nx=sf[xdisp] ; npixels in the cross-disp. direction
 
 nap1=n_elements(left1)
-
 s=fltarr(nap1,np)
+if idisp eq 2 then f2=f else f2=transpose(f)
+
 for i=0,nap1-1 do begin
-  s[i,*]=total(f[left1[i]:right1[i],*],1)
+  s[i,*]=total(f2[left1[i]:right1[i],*],1)
 endfor
 
 if n_elements(vf) gt 0 then begin

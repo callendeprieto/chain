@@ -77,7 +77,7 @@ for i=0,26 do begin
      ngood=ngood+1
      pixels=[pixels,a[1]+wx[0]]
      lambdas=[lambdas,l0]
- 
+     stop
     endif 
 
     
