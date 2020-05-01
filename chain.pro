@@ -6,7 +6,7 @@ if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 logfile='logfile'
 
 ;params
-la_minexptime=900000; min. exp. time to activate la_cosmic cosmic removal
+la_minexptime=9.e10; min. exp. time (seconds) to activate la_cosmic removal
 xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
 ;make data inventory 
@@ -115,7 +115,7 @@ rdnoise = sxpar(header,'RDNOISE')
 f = f * gain
 vf =  f + rdnoise^2
 
-collapse, f, idisp, left,right, xf, vf= vf, vs=xfv
+collapse, f, idisp, left,right, xf, vf= vf, vs=xfv ,/clean
 ws,'xflat.fits',xf,xfv, hd=header
 
 
@@ -143,7 +143,7 @@ for i=0,n_elements(wspe)-1 do begin
   print,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
-  collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
+  collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe ,/clean
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
   ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
   hheader,header 
@@ -165,7 +165,7 @@ for i=0,n_elements(wcal)-1 do begin
   print,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
   frame = frame * gain
   vframe = frame + rdnoise^2
-  collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe 
+  collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe ,/clean
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
   ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
   hheader,header 
