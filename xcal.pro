@@ -156,8 +156,20 @@ for i=0,26 do begin
 
   endelse
 
+  if i eq 0 then begin
+    xx1=pixels
+    yy1=replicate(i,n_elements(pixels))
+    zz1=lambdas
+  endif else begin
+    xx1=[xx1,pixels]
+    yy1=[yy1,replicate(i,n_elements(pixels))]
+    zz1=[zz1,lambdas]
+  endelse
+  help,xx,yy,zz
 endfor
 close,11
+
+stop
 
 end
 
