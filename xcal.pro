@@ -169,7 +169,7 @@ for i=0,26 do begin
 endfor
 close,11
 
-stop
+;stop
 
 end
 

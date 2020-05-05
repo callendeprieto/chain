@@ -5,12 +5,17 @@ pro mkpng
 ;
 
 xn=file_search('[xn]*fits')
+dev = !D.Name
+set_plot,'Z'
+device,set_resolution=[512,256]*2, z_buffer=0
+loadct,3
+tvlct, cgColor('blue',/triple), !p.background
+tvlct, cgColor('white',/triple), !p.color
 for i=0,n_elements(xn)-1 do begin
-  set_plot,'z'
-  device,set_resolution=[512,256]*2, z_buffer=0
-  rs,xn[i],y,w=x,/plot,fcol=15,bcol=255
+  rs,xn[i],y,w=x,/plot,fcol=cgcolor('blue',/decompose),bcol=cgcolor('black',/decompose)
+  ;tvlct, r, g, b, /get
   write_png,strmid(xn[i],0,strlen(xn[i])-4)+'png',tvrd(/true)
   device,/close
 endfor
-set_plot,'X'
+set_plot,dev
 end
