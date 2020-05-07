@@ -6,6 +6,7 @@ if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 logfile='logfile'
 
 ;params
+scat='yes'  ; activate scattered light subtraction
 la_minexptime=9.e10; min. exp. time (seconds) to activate la_cosmic removal
 xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
@@ -135,8 +136,10 @@ for i=0,n_elements(wspe)-1 do begin
     file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
   endif
   hbias,frame,rdn=rdn,/bin
-  scatter,frame,idisp,delta1,back
-  frame = frame - back
+  if scat eq 'yes' then begin
+    scatter,frame,idisp,delta1,back
+    frame = frame - back
+  endif
   gain=sxpar(header,'GAIN')
   rdnoise=sxpar(header,'RDNOISE')
   printf,10,filename,' rdnoise=',rdnoise/gain,rdn,' (counts)'
