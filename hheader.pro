@@ -20,6 +20,7 @@ version=''
 openr,lun,chaindir+'/version.txt',/get_lun
 readf,lun,version
 close,lun
+free_lun,lun
 
 ra=sxpar(hd,'radeg')
 dec=sxpar(hd,'decdeg')

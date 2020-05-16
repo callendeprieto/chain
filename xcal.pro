@@ -26,8 +26,8 @@ home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 
 x=dblarr(27,nx)
-openr,11,chaindir+'/hors_thar.dat'
-;openr,11,chaindir+'/horus_thar.dat'
+;openr,11,chaindir+'/hors_thar.dat'
+openr,11,chaindir+'/horus_thar.dat'
 for i=0,26 do begin
 
 
@@ -40,10 +40,10 @@ for i=0,26 do begin
   coef=dblarr(order+1)
   readf,11,coef
   ;the following two lines are needed when using hors_thar.dat
-  xx=poly(dindgen(4088),coef)
-  if keyword_set(bin) then xx=rebin(xx,2044)
+  ;xx=poly(dindgen(4088),coef)
+  ;if keyword_set(bin) then xx=rebin(xx,2044)
   ;the following line needed when using horus_thar.dat
-  ;xx=poly(dindgen(2048),coef)/10.
+  xx=poly(dindgen(2048),coef)/10.
 
   print,'aperture = ',i+1
   print,nlines,' candidate calibration lines'
