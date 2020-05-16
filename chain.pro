@@ -124,6 +124,7 @@ ws,'xflat.fits',xf,xfv, hd=header
 printf,10,'removing cosmics and scattered light and extracting spes ...'
 print,'removing cosmics and scattered light and extracting spes ...'
 for i=0,n_elements(wspe)-1 do begin
+  print,i
   j=wspe[i]
   filename=st[j].filename
   frame = float(readfits(filename,header))
@@ -150,7 +151,7 @@ for i=0,n_elements(wspe)-1 do begin
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
   ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
   hheader,header 
-  ;write extratcted file
+  ;write extracted file
   ws, xfilename, xframe, xvframe, hd=header
 endfor
 
