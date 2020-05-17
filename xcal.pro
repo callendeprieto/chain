@@ -38,7 +38,9 @@ for i=0,26 do begin
   order=0
   readf,11,i2,nlines,order
   coef=dblarr(order+1)
+  sig=dblarr(order+1)
   readf,11,coef
+  readf,11,sig
   ;the following two lines are needed when using hors_thar.dat
   ;xx=poly(dindgen(4088),coef)
   ;if keyword_set(bin) then xx=rebin(xx,2044)
@@ -107,20 +109,32 @@ for i=0,26 do begin
     pixels=pixels[1:ngood]
     lambdas=lambdas[1:ngood]
 
-    c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
-    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
-    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3)  
-    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
+    c1=poly_fit(pixels,lambdas,1,yerror=yerror1,sigma=sigma1)
+    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2,sigma=sigma2)
+    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3,sigma=sigma3)  
+    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4,sigma=sigma4)
     print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
 	  yerror1,yerror2,yerror3,yerror4
 
-    if yerror4 gt 0.0 then xpixels=poly(pixels,c4) else begin
-      if yerror3 gt 0.0 then xpixels=poly(pixels,c3) else begin
-        if yerror2 gt 0.0 then xpixels=poly(pixels,c2) else begin
-          xpixels=poly(pixels,c1)
+    if yerror4 gt 0.0 then begin
+      cb=c4
+      s=sigma4
+    endif else begin
+      if yerror3 gt 0.0 then begin
+        cb=c3 
+        s=sigma3
+      endif else begin
+        if yerror2 gt 0.0 then begin
+          cb=c2 
+          s=sigma2
+        endif else begin
+          cb=c1
+          s=sigma1
         endelse
       endelse
     endelse
+
+    xpixels=poly(pixels,cb)
 
     yerror1=0.0
     yerror2=0.0
@@ -131,19 +145,48 @@ for i=0,26 do begin
     ngood=n_elements(wgood)
     pixels=pixels[wgood]
     lambdas=lambdas[wgood]
-    c1=poly_fit(pixels,lambdas,1,yerror=yerror1)
-    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2)
-    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3)  
-    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4)
+    c1=poly_fit(pixels,lambdas,1,yerror=yerror1,sigma=sigma1)
+    if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2,sigma=sigma2)
+    if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3,sigma=sigma3)  
+    if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4,sigma=sigma4)
     print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
 	yerror1,yerror2,yerror3,yerror4
 
-    if yerror4 gt 0.0 then x[i,*]=poly(dindgen(nx),c4) else begin
-      if yerror3 gt 0.0 then x[i,*]=poly(dindgen(nx),c3) else begin
-        if yerror2 gt 0.0 then x[i,*]=poly(dindgen(nx),c2) else begin
-          x[i,*]=poly(dindgen(nx),c1)
+    if yerror4 gt 0.0 then begin
+      cb=c4
+      s=sigma4
+    endif else begin
+      if yerror3 gt 0.0 then begin
+        cb=c3 
+        s=sigma3
+      endif else begin
+        if yerror2 gt 0.0 then begin
+          cb=c2 
+          s=sigma2
+        endif else begin
+          cb=c1
+          s=sigma1
         endelse
       endelse
+    endelse
+
+    x[i,*]=poly(dindgen(nx),cb)
+
+    if n_elements(cb) eq 5 then begin
+      ca=transpose(cb)
+      sa=s
+    endif else begin
+      ca=[transpose(cb),replicate(0.0,5-n_elements(cb))]
+      sa=[s,replicate(1.0,5-n_elements(cb))]
+    endelse
+
+
+    if i eq 0 then begin
+      cc=ca
+      ss=sa 
+    endif else begin
+      cc=[[cc],[ca]]
+      ss=[[ss],[sa]]
     endelse
 
     calstats[*,i]=[i+1,n_elements(pixels),median(x[i,*]-shift(x[i,*],1)),$
@@ -162,20 +205,18 @@ for i=0,26 do begin
 
   endelse
 
-  if i eq 0 then begin
-    xx1=pixels
-    yy1=replicate(i,n_elements(pixels))
-    zz1=lambdas
-  endif else begin
-    xx1=[xx1,pixels]
-    yy1=[yy1,replicate(i,n_elements(pixels))]
-    zz1=[zz1,lambdas]
-  endelse
-  help,xx,yy,zz
 endfor
 close,11
 
-;stop
+cc=transpose(cc)
+ss=transpose(ss)
+
+;enforce coherence in the calibration across orders
+calrefine,cc,ss
+
+for i=0,26 do begin
+  x[i,*]=poly(dindgen(nx),cc[i,*])
+endfor
 
 end
 
