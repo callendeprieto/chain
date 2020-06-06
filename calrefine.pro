@@ -18,9 +18,11 @@ norder=n_elements(cc[*,0])
 degree=replicate(0,ncoef)
 degree[0]=8
 degree[1]=2
-!p.multi=[0,2,ncoef]
 enhancement_errors=1.
-if keyword_set(plot) then loadct,12
+if keyword_set(plot) then begin
+  loadct,12
+  !p.multi=[0,2,ncoef]
+endif
 for i=0,ncoef-1 do begin
 
   xcross=dindgen(norder)
