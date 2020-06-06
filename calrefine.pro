@@ -21,8 +21,14 @@ degree[1]=2
 !p.multi=[0,2,ncoef]
 enhancement_errors=1.
 for i=0,ncoef-1 do begin
-  ploterror,cc[*,i],ss[*,i]*enhancement_errors,psy=-4,charsi=2
+
   xcross=dindgen(norder)
+  
+  plot,xcross,cc[*,i],psym=-4,xtit='Aperture #',$
+      title='Coefficient #'+string(i),charsi=1.6
+  oploterror,xcross,cc[*,i],replicate(0.0,norder),$
+     ss[*,i]*enhancement_errors,psym=4,charsi=2
+
   coef=poly_fit(xcross,cc[*,i],degree[i],yfit=yfit,yerror=yerror,sigma=sigma,$
 	measure_errors=ss[*,i]*enhancement_errors)
   coef2=poly_fit(xcross,cc[*,i],degree[i]+1,yfit=yfit2,yerror=yerror2,sigma=sigma2,$
@@ -30,8 +36,11 @@ for i=0,ncoef-1 do begin
 
   if n_elements(yfit) eq 1 then yfit=replicate(yfit,ncoef)
   oplot,xcross,yfit,col=180,thick=3
-  plot,xcross,yfit-cc[*,i],psy=-4,yr=[-yerror,yerror]/3.,charsi=2
+  plot,xcross,yfit-cc[*,i],psy=-4,yr=[-yerror,yerror]/3.,charsi=1.6,$
+    xtit='Aperture #',ytit='Residuals'
   oplot,xcross,yfit2-cc[*,i],psy=-2,col=100
+  xyouts,max(xcross)*0.7,yerror/3.*0.7,'order '+string(degree[i])+ '(adopted)',charsi=2
+  xyouts,max(xcross)*0.7,yerror/3.*0.3,'order '+string(degree[i]+1),col=100,charsi=2
   print,mean(cc[*,i]),stddev(cc[*,i]),yerror,yerror2
   w=where(ss[*,i] lt median(ss[*,i]))
   ;coco=ladfit(xcross[w],cc[w,i])
