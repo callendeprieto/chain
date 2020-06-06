@@ -46,10 +46,16 @@ degree[0]=8
 degree[1]=2
 !p.multi=[0,1,2]
 enhancement_errors=1.
+loadct,12
 for i=0,ncoef-1 do begin
-  ploterror,cc[*,i],ss[*,i]*enhancement_errors,psy=-4,charsi=2
   xcross=dindgen(norder)
-  stop
+  
+  plot,xcross,cc[*,i],psym=-4
+  oploterror,xcross,cc[*,i],replicate(0.0,norder),$
+     ss[*,i]*enhancement_errors,psym=4,charsi=2
+
+
+
   coef=poly_fit(xcross,cc[*,i],degree[i],yfit=yfit,yerror=yerror,sigma=sigma,$
 	measure_errors=ss[*,i]*enhancement_errors)
   coef2=poly_fit(xcross,cc[*,i],degree[i]+1,yfit=yfit2,yerror=yerror2,sigma=sigma2,$
