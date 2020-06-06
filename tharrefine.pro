@@ -63,19 +63,19 @@ for i=0,ncoef-1 do begin
   coef2=poly_fit(xcross,cc[*,i],degree[i]+1,yfit=yfit2,yerror=yerror2,sigma=sigma2,$
 	measure_errors=ss[*,i]*enhancement_errors)
 
-  if n_elements(yfit) eq 1 then yfit=replicate(yfit,ncoef)
+  if n_elements(yfit) eq 1 then yfit=replicate(yfit,norder)
   oplot,xcross,yfit,col=180,thick=3
   plot,xcross,yfit-cc[*,i],psy=-4,yr=[-yerror,yerror]/3.,charsi=1.6,$
     xtit='Aperture #',ytit='Residuals'
   oplot,xcross,yfit2-cc[*,i],psy=-2,col=100
   xyouts,max(xcross)*0.7,yerror/3.*0.7,'order '+string(degree[i])+ '(adopted)',charsi=2
   xyouts,max(xcross)*0.7,yerror/3.*0.3,'order '+string(degree[i]+1),col=100,charsi=2
-  print,mean(cc[*,i]),stddev(cc[*,i]),yerror,yerror2
+  print,'mean-std-error(order='+strcompress(string(degree[i]),/rem)+')-error(order='+strcompress(string(degree[i]+1),/rem)+')',mean(cc[*,i]),stddev(cc[*,i]),yerror,yerror2
   w=where(ss[*,i] lt median(ss[*,i]))
   ;coco=ladfit(xcross[w],cc[w,i])
   ;oplot,xcross,poly(xcross,coco)-cc[*,i],col=60
-  print,'aperture=',i,' deg=',degree[i],' error=',mad(yfit-cc[*,i])
-  print,'aperture=',i,' deg=',degree[i]+1,' error=',mad(yfit2-cc[*,i])
+  print,'aperture=',i,' deg=',degree[i],' mad(residuals)=',mad(yfit-cc[*,i])
+  print,'aperture=',i,' deg=',degree[i]+1,' mad(residuals)=',mad(yfit2-cc[*,i])
   ;stop
   ss[*,i]=replicate(mad(yfit-cc[*,i]),norder)
   cc[*,i]=poly(xcross,coef)
