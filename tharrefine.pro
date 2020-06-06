@@ -49,6 +49,7 @@ enhancement_errors=1.
 for i=0,ncoef-1 do begin
   ploterror,cc[*,i],ss[*,i]*enhancement_errors,psy=-4,charsi=2
   xcross=dindgen(norder)
+  stop
   coef=poly_fit(xcross,cc[*,i],degree[i],yfit=yfit,yerror=yerror,sigma=sigma,$
 	measure_errors=ss[*,i]*enhancement_errors)
   coef2=poly_fit(xcross,cc[*,i],degree[i]+1,yfit=yfit2,yerror=yerror2,sigma=sigma2,$
