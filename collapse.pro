@@ -41,8 +41,8 @@ if n_elements(vf) eq 0 then vf=f
 vs=fltarr(nap,np)
 if idisp eq 2 then vf2=vf else vf2=transpose(vf)
 
-print,'p1'
-help,/mem
+;print,'p1'
+;help,/mem
 
 
 if keyword_set(clean) then begin
@@ -57,8 +57,8 @@ if keyword_set(clean) then begin
     ;a=fltarr(nap)         ; collapsed profile
   endelse
 
-  print,'p2'
-  help,/mem
+  ;print,'p2'
+  ;help,/mem
 
 
   for i=0,nap-1 do begin
@@ -71,7 +71,7 @@ if keyword_set(clean) then begin
   ;a=a/np
   ;w=1./p
 
-  print,'p3'
+  ;print,'p3'
   help,/mem
 
   for i=0,nap-1 do begin
@@ -89,7 +89,7 @@ if keyword_set(clean) then begin
     endfor
   endfor
   
-  print,'p4'
+  ;print,'p4'
   help,/mem
 
 

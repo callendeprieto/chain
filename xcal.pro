@@ -47,7 +47,8 @@ for i=0,26 do begin
   ;the following line needed when using horus_thar.dat
   xx=poly(dindgen(2048),coef)/10.
 
-  print,'aperture = ',i+1
+  print,'-----------------------------------------------------------'
+  print,'aperture # ',i
   print,nlines,' candidate calibration lines'
 
   ;lets measure
@@ -113,8 +114,8 @@ for i=0,26 do begin
     if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2,sigma=sigma2)
     if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3,sigma=sigma3)  
     if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4,sigma=sigma4)
-    print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
-	  yerror1,yerror2,yerror3,yerror4
+    print,'disp-rms (ord=1,2,3,4)=',median(xx-shift(xx,1)),$
+	  yerror1,yerror2,yerror3,yerror4,format='(a24,5(1x,f9.5))'
 
     if yerror4 gt 0.0 then begin
       cb=c4
@@ -149,8 +150,8 @@ for i=0,26 do begin
     if ngood gt 3 then c2=poly_fit(pixels,lambdas,2,yerror=yerror2,sigma=sigma2)
     if ngood gt 4 then c3=poly_fit(pixels,lambdas,3,yerror=yerror3,sigma=sigma3)  
     if ngood gt 5 then c4=poly_fit(pixels,lambdas,4,yerror=yerror4,sigma=sigma4)
-    print,i+1,n_elements(pixels),median(xx-shift(xx,1)),$
-	yerror1,yerror2,yerror3,yerror4
+    print,'disp-rms (ord=1,2,3,4)=',median(xx-shift(xx,1)),$
+	  yerror1,yerror2,yerror3,yerror4,format='(a24,5(1x,f9.5))'
 
     if yerror4 gt 0.0 then begin
       cb=c4
