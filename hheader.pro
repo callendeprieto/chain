@@ -27,7 +27,7 @@ dec=sxpar(hd,'decdeg')
 mjd=sxpar(hd,'MJD-OBS')
 jd=mjd+2400000.5d0
 
-baryvel,jd,2000.,vh,vb
+baryvel,jd,2000,vh,vb
 vbary = vb[0]*cos(dec/!RADEG)*cos(ra*15.d0/!RADEG) + $   
    vb[1]*cos(dec/!RADEG)*sin(ra*15.d0/!RADEG) + vb[2]*sin(dec/!RADEG)
 
