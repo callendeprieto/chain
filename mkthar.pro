@@ -44,7 +44,8 @@ for i=0,norder-1 do begin
   ;now measure peaks
   peaks,y2,l2,h2,fwhm=fwhm,threshold=threshold
   peaks,y,l,h,fwhm=fwhm,threshold=threshold
-  help,l,l2
+  ;help,l,l2
+  print,n_elements(l),n_elements(l2),' peaks found in the HORuS / McD spectra'
   ;to coords rel. to highest peak
   ws=l2[sort(h2)]
   lm=n_elements(y)/2.
@@ -55,23 +56,25 @@ for i=0,norder-1 do begin
   ;now crossmatch peaks
   match,r,r2,wl,wl2,epsil=epsilon
 
-  plot,y2,yr=[0.0,1.3],/ystyle
+  plot,y2,yr=[0.0,1.3],/ystyle,xtit='pixel',ytit='flux'
   oplot,y,col=180
   for j=0,n_elements(wl2)-1 do oplot,[l2[wl2[j]],l2[wl2[j]]],[1.02,1.07]
   for j=0,n_elements(wl)-1 do oplot,[l[wl[j]],l[wl[j]]],[1.1,1.15],col=180
-
-  help,wl2,wl
+  xyouts,n_elements(y2)*0.8,max(y2)*0.7,'McDonald',charsi=2
+  xyouts,n_elements(y2)*0.8,max(y2)*0.8,'HORuS',col=180,charsi=2
+  ;help,wl2,wl
+  print,n_elements(wl2),' peaks cross-matched'
 
   l2=l2[wl2]
   l=l[wl]
 
   ref=interpol(x,dindgen(n_elements(x)),l2)
-  plot,l,ref,psy=3,yr=[min(ref),max(ref)]
+  plot,l,ref,psy=2,yr=[min(ref),max(ref)],xtit='line center (measured pixel)',ytit='assigned line center wavelength (from McD atlas)'
   coef=poly_fit(l,ref,2,yfit=yfit,yerror=yerror,sigma=sigma)
   oplot,l,poly(l,coef),col=180
-  plot,l,(poly(l,coef)-ref)/ref,yr=[-yerror/mean(ref)*3,yerror/mean(ref)*3],charsi=1.6,psy=4
+  plot,l,(poly(l,coef)-ref)/ref,yr=[-yerror/mean(ref)*3,yerror/mean(ref)*3],charsi=1.6,psy=4,xtit='line center pixel',ytitle='wavelength residual',title='2nd order fit'
   mmad=mad(poly(l,coef)-ref)
-  print,i,yerror,mmad,coef[1]
+  print,'order,rms,mad,disp=',i,yerror,mmad,coef[1]
 
   ;cleanup and repeat
   w=where(poly(l,coef)-ref lt mmad)
@@ -80,9 +83,9 @@ for i=0,norder-1 do begin
 
   ref=interpol(x,dindgen(n_elements(x)),l2)
   coef=poly_fit(l,ref,4,yfit=yfit,yerror=yerror,sigma=sigma)
-  plot,l,(poly(l,coef)-ref)/ref,yr=[-yerror/mean(ref)*3,yerror/mean(ref)*3],charsi=1.6,psy=4
+  plot,l,(poly(l,coef)-ref)/ref,yr=[-yerror/mean(ref)*3,yerror/mean(ref)*3],charsi=1.6,psy=4,xtit='line center pixel',ytitle='wavelength residual',title='4th order fit'
   mmad=mad(poly(l,coef)-ref)
-  print,i,yerror,mmad,coef[1]
+  print,'order,rms,mad,disp=',i,yerror,mmad,coef[1]
   printf,11,i+1,n_elements(l),4
   printf,11,transpose(coef)
   printf,11,sigma
