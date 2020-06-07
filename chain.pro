@@ -160,8 +160,8 @@ for i=0,n_elements(wspe)-1 do begin
   
   ;check memory usage
   mem,used,tot,avail
-  print,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
-  printf,10,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
+  print,'memory used-total-avail (MB) = ',used,tot,avail
+  printf,10,'memory used-total-avail (MB) = ',used,tot,avail
 endfor
 
 ;extract cals
@@ -187,8 +187,8 @@ for i=0,n_elements(wcal)-1 do begin
 
   ;check memory usage
   mem,used,tot,avail
-  print,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
-  printf,10,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
+  print,'memory used-total-avail (MB) = ',used,tot,avail
+  printf,10,'memory used-total-avail (MB) = ',used,tot,avail
 endfor
 
 
@@ -207,8 +207,8 @@ for i=0,n_elements(wcal)-1 do begin
   minratio=min(ratio)
   maxratio=max(ratio)
   medratio=median(ratio)
-  print,'min-max-median of rms/dispersion =',minratio,maxratio,medratio
-  printf,10,'min-max-median of rms/dispersion =',minratio,maxratio,medratio
+  print,'min-max-median of rms/dispersion =',minratio,maxratio,medratio,format='(a30,3(1x,f10.5))'
+  printf,10,'min-max-median of rms/dispersion =',minratio,maxratio,medratio,format='(a30,3(1x,f10.5))'
 
   ws, xfilename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin
