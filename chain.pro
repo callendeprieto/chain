@@ -20,18 +20,22 @@ endif
 openw,10,logfile
 
 print,'make inventory of fits files ...'
-print,'                               filename          object  obstype      RA        DEC          mjd0        exptime [s]'
+print,'                      filename                object type  RA[deg] DEC[deg] t[s]'
+print,'-------------------------------------------------------------------------------'
 printf,10,'make inventory of fits files ...'
-printf,10,'                           filename                object  obstype      RA        DEC         mjd0        exptime [s]'
+printf,10,'                      filename                object type RA[deg] DEC[deg] t[s]'
+printf,10,'-------------------------------------------------------------------------------'
 for i=0,n_elements(st.obstype)-1 do begin
-	printf,10,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
-	print,st[i].filename,st[i].object,strmid(st[i].obstype,0,3),$
-		st[i].ra,st[i].dec,st[i].mjd0,st[i].exptime,$
-		format='(x,a45,x,a12,x,a3,x,f12.5,x,f12.5,x,f12.5,x,f7.0)'
+        sfilename=strmid(st[i].filename,strpos(st[i].filename,'/',/reverse_search)+1,1000)
+	printf,10,sfilename,st[i].object,strmid(st[i].obstype,0,3),$
+		st[i].ra,st[i].dec,st[i].exptime,$
+		format='(a41,x,a11,x,a3,x,f8.4,x,f7.3,x,i4)'
+	print,sfilename,st[i].object,strmid(st[i].obstype,0,3),$
+		st[i].ra,st[i].dec,st[i].exptime,$
+		format='(a41,x,a11,x,a3,x,f8.4,x,f7.3,x,i4)'
 endfor
-
+print,'-------------------------------------------------------------------------------'
+printf,10,'-------------------------------------------------------------------------------'
 
 wcal=where(strmid(st.obstype,0,3) eq 'Cal')
 wspe=where(strmid(st.obstype,0,3) eq 'Spe')
@@ -153,6 +157,11 @@ for i=0,n_elements(wspe)-1 do begin
   hheader,header 
   ;write extracted file
   ws, xfilename, xframe, xvframe, hd=header
+  
+  ;check memory usage
+  mem,used,tot,avail
+  print,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
+  printf,10,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
 endfor
 
 ;extract cals
@@ -175,6 +184,11 @@ for i=0,n_elements(wcal)-1 do begin
   hheader,header 
   ;write extratcted file
   ws, xfilename, xframe, xvframe, hd=header
+
+  ;check memory usage
+  mem,used,tot,avail
+  print,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
+  printf,10,'memory used-total-avail (MB) = ',used/1024^2,tot/1024^2,avail/1024^2
 endfor
 
 
@@ -189,11 +203,12 @@ for i=0,n_elements(wcal)-1 do begin
   print,'calibrating ... '+xfilename
   rs, xfilename, xframe, xvframe, hd=header
   xcal, xframe, wframe, /bin,calstats=cs, chaindir=chaindir
-  print,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
-                                      max(cs[6,*]/cs[2,*]),')'
-
-  printf,10,'min(max) of rms/dispersion for 5th-order=',min(cs[6,*]/cs[2,*]),'(',$
-                                      max(cs[6,*]/cs[2,*]),')'
+  ratio=cs[6,*]/cs[2,*]
+  minratio=min(ratio)
+  maxratio=max(ratio)
+  medratio=median(ratio)
+  print,'min-max-median of rms/dispersion =',minratio,maxratio,medratio
+  printf,10,'min-max-median of rms/dispersion =',minratio,maxratio,medratio
 
   ws, xfilename, xframe, xvframe, w = wframe, hd=header
   if i eq 0 then begin

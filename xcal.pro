@@ -190,7 +190,7 @@ for i=0,26 do begin
       ss=[[ss],[sa]]
     endelse
 
-    calstats[*,i]=[i+1,n_elements(pixels),median(x[i,*]-shift(x[i,*],1)),$
+    calstats[*,i]=[i,n_elements(pixels),median(x[i,*]-shift(x[i,*],1)),$
 	yerror1,yerror2,yerror3,yerror4]
 
     if 1 eq 0 then begin

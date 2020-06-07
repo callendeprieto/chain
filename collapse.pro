@@ -90,7 +90,8 @@ if keyword_set(clean) then begin
   endfor
   
   ;print,'p4'
-  help,/mem
+  help,/mem,output=mem
+  
 
 
 endif else begin
