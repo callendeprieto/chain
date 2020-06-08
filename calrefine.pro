@@ -16,7 +16,7 @@ ncoef=n_elements(cc[0,*])
 norder=n_elements(cc[*,0])
 ;!p.multi=[0,3,ceil(ncoef/3.)
 degree=replicate(0,ncoef)
-degree[0]=8
+degree[0]=4
 degree[1]=2
 enhancement_errors=1.
 if keyword_set(plot) then begin

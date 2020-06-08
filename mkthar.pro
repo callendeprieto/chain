@@ -5,6 +5,9 @@ pro mkthar
 
 threshold=0.01 ; relative height of peaks to consider
 epsilon=0.0005 ; pixel space error for matching features
+min_nlines=10  ; minimum number of lines to cross-match 
+               ; epsilon will be increased until reaching it)
+
 
 openw,11,'horus_thar1.dat'
 rs,'x0002364843-20191120-HORS-Cal.fits',yy,w=xx
@@ -53,8 +56,15 @@ for i=0,norder-1 do begin
   ws=l[sort(h)]
   r=(l-lm)/lm
 
-  ;now crossmatch peaks
-  match,r,r2,wl,wl2,epsil=epsilon
+  epsil=epsilon
+  wl2=0
+
+  while n_elements(wl2) lt min_nlines do begin 
+    ;now crossmatch peaks
+    match,r,r2,wl,wl2,epsil=epsil
+    print,n_elements(wl2),' peaks cross-matched'
+    epsil=epsil*2.
+  endwhile
 
   plot,y2,yr=[0.0,1.3],/ystyle,xtit='pixel',ytit='flux'
   oplot,y,col=180

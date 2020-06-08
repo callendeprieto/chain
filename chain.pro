@@ -202,7 +202,7 @@ for i=0,n_elements(wcal)-1 do begin
   printf,10,'calibrating ... '+xfilename
   print,'calibrating ... '+xfilename
   rs, xfilename, xframe, xvframe, hd=header
-  xcal, xframe, wframe, /bin,calstats=cs, chaindir=chaindir
+  xcal2, xframe, wframe,calstats=cs, chaindir=chaindir
   ratio=cs[6,*]/cs[2,*]
   minratio=min(ratio)
   maxratio=max(ratio)

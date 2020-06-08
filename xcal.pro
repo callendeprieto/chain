@@ -1,4 +1,4 @@
-pro  xcal,c,x,calstats=calstats,bin=bin,chaindir=chaindir
+pro  xcal,c,x,calstats=calstats,chaindir=chaindir
 
 ;
 ;	IN:  c -float array 	Collapsed ThAr spectrum
@@ -8,7 +8,6 @@ pro  xcal,c,x,calstats=calstats,bin=bin,chaindir=chaindir
 ;					dispersion, yerror1, yerror2, yerror3, yerror4
 ;
 ;			where yerrorN is the uncertainty for a N-th order polynomial calib.
-;			bin - integer	Set to indicate 8x2 binning
 ;
 ;			chaindir - string  Path to the chain (both software and reference files)
 ;
@@ -20,7 +19,6 @@ wtol=3.3 ; max fwhm accepted for good lines (units of pixels)
 
 calstats=dblarr(7,27)
 nx=4096
-if keyword_set(bin) then nx=nx/2
 
 home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
@@ -43,7 +41,7 @@ for i=0,26 do begin
   readf,11,sig
   ;the following two lines are needed when using hors_thar.dat
   ;xx=poly(dindgen(4088),coef)
-  ;if keyword_set(bin) then xx=rebin(xx,2044)
+  ;xx=rebin(xx,2044)
   ;the following line needed when using horus_thar.dat
   xx=poly(dindgen(2048),coef)/10.
 
@@ -100,7 +98,7 @@ for i=0,26 do begin
 
   if ngood le 1 then begin
 
-    calstats[*,i]=[i+1,0.,0.,$
+    calstats[*,i]=[i,0.,0.,$
 	yerror1,yerror2,yerror3,yerror4]
 
     x[i,*]=dblarr(nx)
@@ -213,11 +211,11 @@ cc=transpose(cc)
 ss=transpose(ss)
 
 ;enforce coherence in the calibration across orders
-calrefine,cc,ss
+;calrefine,cc,ss
 
-for i=0,26 do begin
-  x[i,*]=poly(dindgen(nx),cc[i,*])
-endfor
+;for i=0,26 do begin
+;  x[i,*]=poly(dindgen(nx),cc[i,*])
+;endfor
 
 end
 
