@@ -7,6 +7,8 @@ pro xm,xfile,xmformat=xmformat
 ; IN: xfile -- string Name of an x*fits file (extracted chain spectrum)
 ;
 
+if not keyword_set(xmformat) then xmformat='vo'
+
 rs,xfile,y,v,w=x,hd=hd
 norder=n_elements(y[*,0])
 
