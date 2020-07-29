@@ -6,7 +6,7 @@ if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 logfile='logfile'
 
 ;params
-scat='no'  ; activate scattered light subtraction
+scat='yes'  ; activate scattered light subtraction
 la_minexptime=9.e10; min. exp. time (seconds) to activate la_cosmic removal
 xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
