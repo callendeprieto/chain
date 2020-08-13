@@ -29,10 +29,10 @@ for i=0,n_elements(st.obstype)-1 do begin
         sfilename=strmid(st[i].filename,strpos(st[i].filename,'/',/reverse_search)+1,1000)
 	printf,10,sfilename,st[i].object,strmid(st[i].obstype,0,3),$
 		st[i].ra,st[i].dec,st[i].exptime,$
-		format='(a41,x,a11,x,a3,x,f8.4,x,f7.3,x,i4)'
+		format='(a42,x,a10,x,a3,x,f8.4,x,f7.3,x,i4)'
 	print,sfilename,st[i].object,strmid(st[i].obstype,0,3),$
 		st[i].ra,st[i].dec,st[i].exptime,$
-		format='(a41,x,a11,x,a3,x,f8.4,x,f7.3,x,i4)'
+		format='(a42,x,a10,x,a3,x,f8.4,x,f7.3,x,i4)'
 endfor
 print,'-------------------------------------------------------------------------------'
 printf,10,'-------------------------------------------------------------------------------'

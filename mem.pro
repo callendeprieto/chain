@@ -13,9 +13,9 @@ spawn,'free -b',free
 memarr=strsplit(memo[0],' ',/ext)
 freearr=strsplit(free[1],' ',/ext)
 
-used=long(strmid(memarr[3],0,strlen(memarr[3])-1))
-tot=long(freearr[1])
-used2=long(freearr[2])
+used=long64(strmid(memarr[3],0,strlen(memarr[3])-1))
+tot=long64(freearr[1])
+used2=long64(freearr[2])
 avail=tot-used2
 
 ;from B to MB
