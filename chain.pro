@@ -153,6 +153,8 @@ for i=0,n_elements(wspe)-1 do begin
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe ,/clean
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  if strmid(xfilename,strlen(xfilename)-3,3) eq '.gz' then $
+    xfilename=strmid(xfilename,0,strlen(xfilename)-3)
   ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
   hheader,header 
   ;write extracted file
@@ -180,6 +182,8 @@ for i=0,n_elements(wcal)-1 do begin
   vframe = frame + rdnoise^2
   collapse, frame, idisp, left, right, xframe, vf = vframe, vs = xvframe ,/clean
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  if strmid(xfilename,strlen(xfilename)-3,3) eq '.gz' then $
+       xfilename=strmid(xfilename,0,strlen(xfilename)-3)
   ;upgrade header with HORuS coords (HORUSRA/HORUSDEC) and reduction time stamp
   hheader,header 
   ;write extratcted file
@@ -199,6 +203,8 @@ for i=0,n_elements(wcal)-1 do begin
   j=wcal[i]
   filename=st[j].filename
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  if strmid(xfilename,strlen(xfilename)-3,3) eq '.gz' then $
+        xfilename=strmid(xfilename,0,strlen(xfilename)-3)
   printf,10,'calibrating ... '+xfilename
   print,'calibrating ... '+xfilename
   rs, xfilename, xframe, xvframe, hd=header
@@ -233,7 +239,11 @@ for i=0,n_elements(wspe)-1 do begin
   j=wspe[i]
   filename=st[j].filename
   xfilename='x'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  if strmid(xfilename,strlen(xfilename)-3,3) eq '.gz' then $
+       xfilename=strmid(xfilename,0,strlen(xfilename)-3)
   nfilename='n'+strmid(filename,strpos(filename,'/',/reverse_search)+1)
+  if strmid(nfilename,strlen(nfilename)-3,3) eq '.gz' then $
+       nfilename=strmid(nfilename,0,strlen(nfilename)-3)
   printf,10,'calibrating ... '
   print,'calibrating ... '
   printf,10,xfilename+'  mjd=',st[j].mjd0
