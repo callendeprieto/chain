@@ -304,7 +304,10 @@ endfor
 close,10
 
 ;create plots
-mkpng
+;mkpng
+cmd = 'python '+chaindir+'/horus.py'
+spawn,cmd,back
+print,back
 
 end
 
