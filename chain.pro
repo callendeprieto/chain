@@ -8,7 +8,7 @@ logfile='logfile'
 ;params
 scat='yes'  ; activate scattered light subtraction
 la_minexptime=9.e10; min. exp. time (seconds) to activate la_cosmic removal
-xmformat='rana'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
+xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
 ;make data inventory 
 inventory,st,/bin
