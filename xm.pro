@@ -47,6 +47,22 @@ endif
 
 case xmformat of
   'vo': begin
+
+             sxaddpar,hd,'TFIELDS',3
+             sxaddpar,hd,'TTYPE1','WAVELENGTH'
+             sxaddpar,hd,'TTYPE2','FLUX'
+             sxaddpar,hd,'TTYPE3','VARIANCE'
+             sxaddpar,hd,'TUNIT1','NANOMETER'
+             sxaddpar,hd,'TUNIT2','E-/PIXEL','prior to continuum normalization'
+             sxaddpar,hd,'TUNIT3','(E-/PIXEL)**2','prior to continuum normalization'
+             sxaddpar,hd,'TDISP1','F15.7'
+             sxaddpar,hd,'TDISP2','F15.7'
+             sxaddpar,hd,'TDISP3','F15.7'
+             sxaddpar,hd,'TFORM1','D'
+             sxaddpar,hd,'TFORM2','D'
+             sxaddpar,hd,'TFORM3','D'
+             sxaddpar,hd,'FILENAME','v'+strmid(xfile,1)
+
              data=replicate({wavelength:x2[0],flux:y2[0],var:v2[0]},n_elements(x2))
              data.wavelength=x2
              data.flux=y2
