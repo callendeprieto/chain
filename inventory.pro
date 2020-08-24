@@ -9,12 +9,12 @@ pro	inventory,st,verbose=verbose,bin=bin
 ;
 
 
-files=file_search('0*fits???')
+files=file_search('0*fits')
 if n_elements(files) eq 1 then begin
 if strlen(files[0]) eq 0 then begin
   print,'% INVENTORY: Cannot find 0*fits files in the current directory'
   print,'%            Searching for data in ../*/0*fits  ...'
-  files=file_search('../*/0*fits???')
+  files=file_search('../*/0*fits')
   if n_elements(files) eq 1 then begin
   if strlen(files[0]) eq 0 then begin
     print,'% INVENTORY: Cannot find ../*/0*fits files'
