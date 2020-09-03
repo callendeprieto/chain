@@ -257,11 +257,15 @@ for i=0,n_elements(wspe)-1 do begin
     printf,10,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
     print,'   1-'+calfiles[wpre]+'  mjd=',calmjd[wpre]
     rs, calfiles[wpre], x1, xv1, w = w1
+    sxaddpar,header,'FILECAL1',calfiles[wpre],'Cal. spectrum preceding observation'
+    sxaddpar,header,'MJDCAL1',calmjd[wpre],'MJD Ca. spectrum preceding'
   endif
   if max(wpos) gt -1 then begin  
     printf,10,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
     print,'   2-'+calfiles[wpos]+'  mjd=',calmjd[wpos]
     rs, calfiles[wpos], x2, xv2, w = w2
+    sxaddpar,header,'FILECAL2',calfiles[wpos],'Cal. spectrum following observation'
+    sxaddpar,header,'MJDCAL2',calmjd[wpos],'MJD Ca. spectrum following'
   endif
 
   if max(wpre) gt -1 and max(wpos) gt -1 then begin
