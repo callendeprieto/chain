@@ -161,9 +161,9 @@ for i=0,n_elements(wspe)-1 do begin
   ws, xfilename, xframe, xvframe, hd=header
   
   ;check memory usage
-  mem,used,tot,avail
-  print,'memory used-total-avail (MB) = ',used,tot,avail
-  printf,10,'memory used-total-avail (MB) = ',used,tot,avail
+  ;mem,used,tot,avail
+  ;print,'memory used-total-avail (MB) = ',used,tot,avail
+  ;printf,10,'memory used-total-avail (MB) = ',used,tot,avail
 endfor
 
 ;extract cals
@@ -190,9 +190,9 @@ for i=0,n_elements(wcal)-1 do begin
   ws, xfilename, xframe, xvframe, hd=header
 
   ;check memory usage
-  mem,used,tot,avail
-  print,'memory used-total-avail (MB) = ',used,tot,avail
-  printf,10,'memory used-total-avail (MB) = ',used,tot,avail
+  ;mem,used,tot,avail
+  ;print,'memory used-total-avail (MB) = ',used,tot,avail
+  ;printf,10,'memory used-total-avail (MB) = ',used,tot,avail
 endfor
 
 
