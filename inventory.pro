@@ -1,4 +1,4 @@
-pro	inventory,st,verbose=verbose,bin=bin
+pro	inventory,files,st,verbose=verbose,bin=bin
 
 ;
 ;	This routine returns information on all the HORuS frames
@@ -9,7 +9,6 @@ pro	inventory,st,verbose=verbose,bin=bin
 ;
 
 
-files=file_search('0*fits')
 if n_elements(files) eq 1 then begin
 if strlen(files[0]) eq 0 then begin
   print,'% INVENTORY: Cannot find 0*fits files in the current directory'
@@ -30,12 +29,6 @@ for i=0,n_elements(files)-1 do begin
   info=file_info(files[i])
 
   ;print,info.size/1024./1024.
-
-  if keyword_set(bin) then begin
-;	if info.size/1024./1024. gt 2.1 then continue; MB
-  endif else begin
-	if info.size/1024./1024. lt 30. then continue; MB
-  endelse
 
   ;read data and header
   print,'reading '+files[i]
@@ -84,6 +77,7 @@ if n_elements(st) eq 0 then begin
   print,'% INVENTORY: -- no data available for the specified binning size'
   return
 endif
+
 
 ;select only unbinned or binned data
 if keyword_set(bin) then begin

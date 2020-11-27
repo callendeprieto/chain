@@ -1,8 +1,9 @@
-pro chain,chaindir=chaindir
+pro chain,chaindir=chaindir,bin=bin
 
 ;basic dir/files
 home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
+if n_elements(bin) eq 0 then bin=1
 logfile='logfile'
 
 ;params
@@ -10,10 +11,24 @@ scat='yes'  ; activate scattered light subtraction
 la_minexptime=9.e10; min. exp. time (seconds) to activate la_cosmic removal
 xmformat='vo'    ; format for order-merged output: '', 'vo', 'three-col' or 'rana'
 
-;make data inventory 
-inventory,st,/bin
+;collect input files
+files=file_search('00*fits')
+
+;rebin unbinned data and rebin
+if bin eq 0 then begin
+  for i=0,n_elements(files)-1 do begin
+    newfile=files[i]
+    strput,newfile,'01',0
+    sbin,files[i],newfile
+  endfor
+  files=file_search('01*fits')
+endif
+
+;make data inventory
+inventory,files,st,/bin
 if n_elements(st) eq 0 then begin
-  print,'% CHAIN1: no binned (2x8) data'
+  if keyword_set(bin) then print,'% CHAIN: no binned (2x8) data' else $
+	print,'% CHAIN: no unbinned (1x1) data'
   return
 endif
 
