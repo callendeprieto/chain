@@ -1,10 +1,10 @@
-pro chain,chaindir=chaindir,bin=bin
+pro chain,chaindir=chaindir,bin=bin,logfile=logfile
 
 ;basic dir/files
 home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 if n_elements(bin) eq 0 then bin=1
-logfile='logfile'
+if not keyword_set(logfile) then logfile='logfile'
 
 ;params
 scat='yes'  ; activate scattered light subtraction
@@ -74,8 +74,9 @@ endif
 ;average binned flats and extract average
 printf,10,'creating average binned flat ...'
 print,'creating average flat ...'
-imadd,st[wfla].filename,'flat.fits',/av
-f = readfits('flat.fits',header)
+if bin eq 1 then flatname='flat.fits' else flatname='uflat.fits'
+imadd,st[wfla].filename,flatname,/av
+f = readfits(flatname,header)
 
 ;find order information from flat...
 printf,10,'find order information from flat spectrum...'
@@ -118,8 +119,15 @@ delta=median(ap[*,np/2]-shift(ap[*,np/2],1))/2.*width
 
 
 ;save aperture info
-writefits,strcompress('ap1.fits',/rem),ap1
-writefits,'ap.fits',ap
+if bin == 1 then begin
+  ap1name='ap1.fits'
+  apname='ap.fits'
+endif else begin
+  ap1name='uap1.fits'
+  apname='uap.fits'
+endelse
+writefits,strcompress(ap1name,/rem),ap1
+writefits,apname,ap
 printf,10,'delta1=',delta1
 print,'delta1=',delta1
 printf,10,'delta=',delta
@@ -136,7 +144,7 @@ f = f * gain
 vf =  f + rdnoise^2
 
 collapse, f, idisp, left,right, xf, vf= vf, vs=xfv ,/clean
-ws,'xflat.fits',xf,xfv, hd=header
+ws,'x'+flatname,xf,xfv, hd=header
 
 
 ;remove cosmics, scattered light and extract spes
@@ -242,8 +250,8 @@ for i=0,n_elements(wcal)-1 do begin
 endfor
 
 ;average flatfield (approx. cal. using last cal)
-rs,'xflat.fits', xframe, xvframe, hd=header
-ws, 'xflat.fits', xframe, xvframe, w = wframe, hd=header
+rs,'x'+flatname, xframe, xvframe, hd=header
+ws, 'x'+flatname, xframe, xvframe, w = wframe, hd=header
 
 
 print,calfiles
