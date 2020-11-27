@@ -45,15 +45,15 @@ wob=[wcal,wspe]
 
 ;have got enough data?
 if max(wcal) lt 0 then begin
-  print,'% CHAIN2: no Cal images available, I quit' 
+  print,'% CHAIN: no Cal images available, I quit' 
   return
 endif
 if max(wfla) lt 0 then begin
-  print,'% CHAIN2: no Fla images available, I quit' 
+  print,'% CHAIN: no Fla images available, I quit' 
   return
 endif
 if max(wspe) lt 0 then begin
-  print,'% CHAIN2: no Spe images available, only Cal frames will collapsed' 
+  print,'% CHAIN: no Spe images available, only Cal frames will collapsed' 
 endif
 
 ;average binned flats and extract average
