@@ -1,10 +1,10 @@
-pro chain,chaindir=chaindir,bin=bin
+pro chain,chaindir=chaindir,bin=bin,logfile=logfile
 
 ;basic dir/files
 home=getenv('HOME')
 if not keyword_set(chaindir) then chaindir=home+'/idl/chain'
 if n_elements(bin) eq 0 then bin=1
-logfile='logfile'
+if not keyword_set(logfile) then logfile='logfile'
 
 ;params
 scat='yes'  ; activate scattered light subtraction
