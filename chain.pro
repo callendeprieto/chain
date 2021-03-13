@@ -335,7 +335,7 @@ close,10
 
 ;create plots
 ;mkpng
-cmd = 'python '+chaindir+'/horus.py'
+cmd = 'python3 '+chaindir+'/horus.py'
 spawn,cmd,back
 print,back
 
