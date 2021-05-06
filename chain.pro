@@ -66,6 +66,7 @@ printf,10,'---------------------------------------------------------------------
 wcal=where(strmid(st.obstype,0,3) eq 'Cal')
 wspe=where(strmid(st.obstype,0,3) eq 'Spe')
 wfla=where(strmid(st.obstype,0,3) eq 'Fla')
+wdar=where(strmid(st.obstype,0,3) eq 'Dar')
 wob=[wcal,wspe]
 
 
@@ -81,6 +82,12 @@ endif
 if max(wspe) lt 0 then begin
   print,'% CHAIN: no Spe images available, only Cal frames will collapsed' 
 endif
+if (n_elements(wdar) ne 1 or max(wdar) lt 0) then begin
+  print,'% CHAIN: no single Dar image available -- the dark current will not be subtracted'
+endif else begin
+  dark = readfits(st[wdar].filename)
+endelse
+
 
 ;average binned flats and extract average
 printf,10,'creating average binned flat ...'
@@ -166,7 +173,12 @@ for i=0,n_elements(wspe)-1 do begin
     frame = readfits('tmp-out.fits')
     file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
   endif
-  hbias,frame,rdn=rdn,/bin
+  if n_elements(dark) gt 0 then begin
+    frame = frame - dark/mean(dark[0:100,*])*mean(frame[0:100,*])
+    rdn=stddev(frame[*,1:16])
+  endif else begin
+    hbias,frame,rdn=rdn,/bin
+  endelse
   if scat eq 'yes' then begin
     scatter,frame,idisp,delta1,back
     frame = frame - back
