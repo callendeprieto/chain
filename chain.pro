@@ -82,12 +82,16 @@ endif
 if max(wspe) lt 0 then begin
   print,'% CHAIN: no Spe images available, only Cal frames will collapsed' 
 endif
-if (n_elements(wdar) ne 1 or max(wdar) lt 0) then begin
-  print,'% CHAIN: no single Dar image available -- the dark current will not be subtracted'
+if (max(wdar) lt 0) then begin
+  print,'% CHAIN: no Dar image available -- the dark current will not be subtracted'
 endif else begin
-  dark = readfits(st[wdar].filename)
+  if (n_elements(wdar) eq 1) then begin
+    dark = readfits(st[wdar].filename)
+  endif else begin
+    print,'% CHAIN: Warning -- multiple Dar images available -- the first one will be used'
+    dark = readfits(st[wdar[0]].filename)
+  endelse
 endelse
-
 
 ;average binned flats and extract average
 printf,10,'creating average binned flat ...'
@@ -174,9 +178,11 @@ for i=0,n_elements(wspe)-1 do begin
     file_delete,'tmp.fits','tmp-out.fits','tmp-mask.fits'
   endif
   if n_elements(dark) gt 0 then begin
+    print,'subtracting dark to image ',filename
     frame = frame - dark/mean(dark[0:100,*])*mean(frame[0:100,*])
     rdn=stddev(frame[*,1:16])
   endif else begin
+    print,'subtracting bias to image ',filename
     hbias,frame,rdn=rdn,/bin
   endelse
   if scat eq 'yes' then begin
